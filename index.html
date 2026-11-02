@@ -1,563 +1,997 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>🇩🇪 Deutsch Fiszki</title>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Deutsch im Alltag</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+/* Layout: jedna wąska kolumna jak tablica dworcowa: granatowa karta na szarym tle, liczniki w stylu Anki nad kartą, cztery przyciski oceny pod nią. */
 :root{
-  --bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--accent:#4361ee;--accent2:#3a0ca3;
-  --green:#06d6a0;--red:#ef476f;--yellow:#ffd166;--text:#e8e8e8;--text2:#a0a0b8;
-  --radius:18px;--shadow:0 8px 32px rgba(0,0,0,.45)
+  --bg:#e9edf2;
+  --surface:#ffffff;
+  --ink:#13233b;
+  --muted:#56657c;
+  --line:#c9d2de;
+  --sign:#13233b;
+  --sign-ink:#ffffff;
+  --sign-soft:#c4d0e2;
+  --sign-line:#3a4d6b;
+  --accent:#f2b705;
+  --accent-ink:#13233b;
+  --good-bg:#1f7a4d;
+  --good-ink:#ffffff;
+  --warn-bg:#b3261e;
+  --warn-ink:#ffffff;
+  --easy-bg:#1a56c4;
+  --easy-ink:#ffffff;
+  --focus:#2457c5;
+  --der:#1a56c4;
+  --die:#c62828;
+  --das:#1b7a46;
+  --sign-der:#9cc0ff;
+  --sign-die:#ffa8a2;
+  --sign-das:#86e0ae;
+  --a-der:var(--der);
+  --a-die:var(--die);
+  --a-das:var(--das);
+  --f-display:'Barlow Condensed','Arial Narrow','Roboto Condensed',system-ui,sans-serif;
+  --f-body:'Barlow',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
 }
-body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
-.app{max-width:480px;margin:auto;padding:12px 14px 100px}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c1626;--surface:#15243a;--ink:#e8eef6;--muted:#9db0c8;--line:#2a3d58;
+    --sign:#234a7d;--sign-line:#5578a8;--sign-soft:#d3def0;--accent:#f5c518;
+    --good-bg:#3fae78;--good-ink:#06210f;--warn-bg:#ef7b72;--warn-ink:#2b0905;
+    --easy-bg:#8ab4ff;--easy-ink:#07182f;--focus:#8db4ff;
+    --der:#8ab4ff;--die:#ff8f88;--das:#6fd9a0;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c1626;--surface:#15243a;--ink:#e8eef6;--muted:#9db0c8;--line:#2a3d58;
+  --sign:#234a7d;--sign-line:#5578a8;--sign-soft:#d3def0;--accent:#f5c518;
+  --good-bg:#3fae78;--good-ink:#06210f;--warn-bg:#ef7b72;--warn-ink:#2b0905;
+  --easy-bg:#8ab4ff;--easy-ink:#07182f;--focus:#8db4ff;
+  --der:#8ab4ff;--die:#ff8f88;--das:#6fd9a0;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--f-body);
+  padding-block:1.25rem 3rem;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap{max-width:40rem;margin:0 auto;display:flex;flex-direction:column;gap:1.25rem}
+h1,h2{font-family:var(--f-display);font-weight:700;text-wrap:balance}
+header{display:flex;flex-direction:column;gap:.9rem}
+.brand{display:flex;flex-direction:column;gap:.2rem}
+h1{margin:0;font-size:2.4rem;line-height:1;letter-spacing:.01em;text-transform:uppercase}
+.brand p{margin:0;color:var(--muted);font-size:.95rem;max-width:34rem}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:.55rem .7rem;min-width:0}
+.stat b{display:block;font:700 1.7rem/1.1 var(--f-display);font-variant-numeric:tabular-nums}
+.stat span{display:block;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:2px solid var(--line)}
+.tab{
+  appearance:none;background:none;border:0;border-bottom:4px solid transparent;margin-bottom:-2px;
+  min-height:2.9rem;padding:.4rem .2rem;color:var(--muted);cursor:pointer;
+  font:700 1.15rem/1 var(--f-display);letter-spacing:.04em;text-transform:uppercase;
+}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.panel{display:flex;flex-direction:column;gap:1rem}
+.bar{display:flex;align-items:flex-end;justify-content:space-between;gap:.75rem 1rem;flex-wrap:wrap}
+.pickers{display:flex;gap:.5rem;flex-wrap:wrap;min-width:0}
+.counts{display:flex;gap:1.1rem}
+.cnt{display:flex;flex-direction:column;align-items:center;line-height:1}
+.cnt b{font:700 1.7rem/1 var(--f-display);font-variant-numeric:tabular-nums}
+.cnt i{font-style:normal;font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-top:.2rem}
+.cnt.cur b{text-decoration:underline;text-underline-offset:.2em;text-decoration-thickness:3px}
+.c-new b{color:var(--der)}
+.c-learn b{color:var(--die)}
+.c-rev b{color:var(--das)}
+label{display:block;font-weight:600;font-size:.9rem;margin-bottom:.25rem}
+input,select,textarea{
+  width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);
+  border:1.5px solid var(--line);border-radius:6px;padding:.65rem .75rem;min-height:2.9rem;
+}
+textarea{resize:vertical}
+select{width:auto;max-width:100%}
+.btn{
+  appearance:none;border:0;border-radius:6px;min-height:3rem;padding:.6rem 1rem;cursor:pointer;
+  font:600 1rem/1.2 var(--f-body);display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.warn{background:var(--warn-bg);color:var(--warn-ink)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn[disabled]{opacity:.5;cursor:default}
+.btn.big{min-height:3.4rem;font-size:1.05rem}
+.actions{display:grid;gap:.6rem}
+.actions.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.rates{display:grid;grid-template-columns:repeat(auto-fit,minmax(7.5rem,1fr));gap:.5rem}
+.rate{
+  appearance:none;border:0;border-radius:6px;cursor:pointer;min-height:3.8rem;padding:.5rem .4rem;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;
+  font:600 1rem/1.1 var(--f-body);
+}
+.rate .iv{font:400 .78rem/1 var(--f-mono);opacity:.9}
+.rate.r1{background:var(--warn-bg);color:var(--warn-ink)}
+.rate.r2{background:var(--surface);color:var(--ink);border:1.5px solid var(--line)}
+.rate.r3{background:var(--good-bg);color:var(--good-ink)}
+.rate.r4{background:var(--easy-bg);color:var(--easy-ink)}
 
-/* header */
-.header{display:flex;align-items:center;justify-content:space-between;padding:10px 0 6px}
-.logo{font-size:22px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.streak{font-size:13px;color:var(--yellow);display:flex;align-items:center;gap:4px}
+/* karta */
+.sign{
+  background:var(--sign);color:var(--sign-ink);border-radius:6px;padding:1rem 1.1rem 0;
+  display:flex;flex-direction:column;gap:.9rem;min-height:15rem;border-bottom:6px solid var(--accent);
+  --a-der:var(--sign-der);--a-die:var(--sign-die);--a-das:var(--sign-das);
+}
+.sign-top{display:flex;align-items:center;justify-content:space-between;gap:.75rem}
+.tags{display:flex;gap:.4rem;flex-wrap:wrap;min-width:0}
+.tag{
+  background:var(--accent);color:var(--accent-ink);font:700 .85rem/1 var(--f-display);
+  letter-spacing:.08em;text-transform:uppercase;padding:.3rem .5rem;border-radius:3px;
+}
+.tag.alt{background:transparent;color:var(--sign-ink);border:1.5px solid var(--sign-line)}
+.icon-btn{
+  appearance:none;background:transparent;color:var(--sign-ink);border:1.5px solid var(--sign-line);
+  border-radius:6px;width:2.75rem;height:2.75rem;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex:none;
+}
+.icon-btn svg{width:1.3rem;height:1.3rem;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.front{margin:auto 0 0;display:flex;flex-direction:column;gap:.5rem}
+.de{margin:0;font:700 clamp(2rem,9.5vw,3.3rem)/1.05 var(--f-display);overflow-wrap:anywhere;text-wrap:balance}
+.de.long{font-size:clamp(1.55rem,6.8vw,2.3rem);line-height:1.15}
+.sub{margin:0;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;color:var(--sign-soft)}
+.back{border-top:1.5px solid var(--sign-line);padding-top:.8rem;display:flex;flex-direction:column;gap:.7rem}
+.back .pl{margin:0;font:600 1.5rem/1.25 var(--f-body);overflow-wrap:anywhere}
+.back .info{margin:0;font:400 .88rem/1.55 var(--f-mono);color:var(--sign-soft);overflow-wrap:anywhere;white-space:pre-line}
+.exs{display:flex;flex-direction:column;gap:.7rem}
+.ex{display:flex;flex-direction:column;gap:.1rem;border-left:3px solid var(--sign-line);padding-left:.7rem}
+.ex .lab{font:700 .78rem/1 var(--f-display);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:.15rem}
+.ex .xde{margin:0;font-size:1.05rem;overflow-wrap:anywhere}
+.ex .xpl{margin:0;font-size:.92rem;color:var(--sign-soft);overflow-wrap:anywhere}
+.sign-foot{display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.6rem 0 .8rem;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;color:var(--sign-soft)}
+.art{font-weight:700}
+.art-der{color:var(--a-der)}
+.art-die{color:var(--a-die)}
+.art-das{color:var(--a-das)}
+.track{display:inline-flex;gap:3px;vertical-align:middle}
+.legend{margin:0;font-size:.85rem;color:var(--muted)}
+.legend .art{--a-der:var(--der);--a-die:var(--die);--a-das:var(--das)}
+.empty{background:var(--surface);border:1.5px dashed var(--line);border-radius:6px;padding:1.25rem;display:flex;flex-direction:column;gap:.75rem}
+.empty h2{margin:0;font-size:1.6rem;line-height:1.1}
+.empty p{margin:0;color:var(--muted)}
+.empty .actions{margin-top:.25rem}
 
-/* stats bar */
-.stats{display:flex;gap:6px;margin:8px 0 12px}
-.stat{flex:1;background:var(--card);border-radius:12px;padding:10px 8px;text-align:center}
-.stat .num{font-size:22px;font-weight:800}
-.stat .lab{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
-.stat.s-new .num{color:var(--accent)}
-.stat.s-know .num{color:var(--green)}
-.stat.s-unk .num{color:var(--red)}
-.stat.s-tot .num{color:var(--yellow)}
+/* formularze */
+form{display:flex;flex-direction:column;gap:.9rem;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:1rem}
+.hint{font-size:.85rem;color:var(--muted);margin:.25rem 0 0}
+.msg{min-height:1.4rem;margin:0;font-weight:600;font-size:.95rem}
+.msg.err{color:var(--warn-bg)}
 
-/* progress */
-.progress{height:4px;background:#222;border-radius:4px;margin-bottom:14px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:4px;transition:width .4s}
+textarea.imp{font-family:var(--f-mono);font-size:.82rem;line-height:1.5}
+.fmt{margin:.25rem 0 0;font:400 .8rem/1.5 var(--f-mono);color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere}
 
-/* filters */
-.filters{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
-.filters select,.filters button{background:var(--card);color:var(--text);border:1px solid #333;border-radius:10px;padding:8px 12px;font-size:13px;cursor:pointer;flex:1;min-width:0}
-.filters button:active{background:var(--accent)}
+/* lista */
+.filters{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:.45rem}
+.chip{
+  appearance:none;border:1.5px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;
+  min-height:2.5rem;padding:.35rem .85rem;font:600 .92rem/1 var(--f-body);cursor:pointer;
+}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+ul.rows{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.25rem .75rem;align-items:center;padding:.75rem 0;border-bottom:1px solid var(--line)}
+.row .main{min-width:0}
+.rde{font:700 1.35rem/1.15 var(--f-display);overflow-wrap:anywhere}
+.rpl{color:var(--muted);font-size:.95rem;overflow-wrap:anywhere}
+.meta{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-top:.2rem;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.del{min-height:2.5rem;padding:.3rem .75rem;font-size:.88rem}
 
-/* card */
-.card-wrap{perspective:1200px;margin-bottom:12px}
-.card{position:relative;min-height:280px;border-radius:var(--radius);cursor:pointer;transform-style:preserve-3d;transition:transform .5s;-webkit-tap-highlight-color:transparent}
-.card.flipped{transform:rotateY(180deg)}
-.card-face{position:absolute;inset:0;border-radius:var(--radius);padding:24px 20px;display:flex;flex-direction:column;backface-visibility:hidden;overflow-y:auto}
-.card-front{background:linear-gradient(145deg,var(--card),var(--card2));box-shadow:var(--shadow)}
-.card-back{background:linear-gradient(145deg,#1b2a4a,var(--card));box-shadow:var(--shadow);transform:rotateY(180deg)}
-.card-cat{display:inline-block;font-size:10px;text-transform:uppercase;letter-spacing:1px;background:var(--accent);color:#fff;padding:3px 10px;border-radius:20px;align-self:flex-start;margin-bottom:12px}
-.card-de{font-size:26px;font-weight:800;line-height:1.3;margin-bottom:10px}
-.card-ex{font-size:16px;color:var(--text2);font-style:italic;line-height:1.5;margin-bottom:6px}
-.card-pl{font-size:24px;font-weight:700;color:var(--green);margin-bottom:10px;line-height:1.3}
-.card-expl{font-size:15px;color:var(--text2);line-height:1.5}
-.card-note{font-size:13px;color:var(--yellow);margin-top:8px;padding-top:8px;border-top:1px solid #333}
-.card-saved{position:absolute;top:14px;right:14px;font-size:18px}
-.card-hint{color:#555;font-size:13px;margin-top:auto;padding-top:14px;text-align:center}
-.card-num{position:absolute;bottom:10px;right:16px;font-size:11px;color:#444}
-.empty-card{display:flex;align-items:center;justify-content:center;min-height:280px;background:var(--card);border-radius:var(--radius);text-align:center;color:var(--text2);font-size:16px;padding:30px}
-
-/* buttons */
-.actions{display:flex;gap:8px;margin-bottom:8px}
-.actions button{flex:1;border:none;border-radius:14px;padding:16px 8px;font-size:15px;font-weight:700;cursor:pointer;transition:transform .1s,box-shadow .2s}
-.actions button:active{transform:scale(.95)}
-.btn-no{background:linear-gradient(135deg,#ef476f,#c1255a);color:#fff}
-.btn-hard{background:linear-gradient(135deg,#ff9f1c,#e07b00);color:#fff}
-.btn-ok{background:linear-gradient(135deg,#06d6a0,#049a6e);color:#fff}
-.btn-easy{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
-.nav{display:flex;gap:8px;margin-bottom:16px}
-.nav button{flex:1;background:var(--card);color:var(--text);border:1px solid #333;border-radius:12px;padding:12px;font-size:14px;cursor:pointer}
-.nav button:active{background:#333}
-
-/* bottom nav */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid #222;display:flex;z-index:100}
-.bottom-nav button{flex:1;background:none;border:none;color:var(--text2);padding:10px 4px 8px;font-size:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s}
-.bottom-nav button.active{color:var(--accent)}
-.bottom-nav button .ico{font-size:20px}
-
-/* pages */
-.page{display:none}.page.active{display:block}
-
-/* list page */
-.list-header{display:flex;gap:8px;margin-bottom:12px}
-.list-header input{flex:1;background:var(--card);color:var(--text);border:1px solid #333;border-radius:10px;padding:10px 14px;font-size:14px}
-.list-header input::placeholder{color:#555}
-.list-tabs{display:flex;gap:4px;margin-bottom:12px}
-.list-tabs button{flex:1;background:var(--card);color:var(--text2);border:1px solid #333;border-radius:10px;padding:8px;font-size:12px;cursor:pointer}
-.list-tabs button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.list-item{background:var(--card);border-radius:12px;padding:12px 14px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
-.li-text{flex:1;min-width:0}
-.li-de{font-size:15px;font-weight:700}
-.li-pl{font-size:13px;color:var(--text2);margin-top:2px}
-.li-ex{font-size:12px;color:#666;font-style:italic;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.li-cat{font-size:9px;background:#333;color:var(--text2);padding:2px 6px;border-radius:6px;margin-top:4px;display:inline-block}
-.li-actions{display:flex;flex-direction:column;gap:4px}
-.li-actions button{background:#222;border:1px solid #333;color:var(--text);border-radius:8px;padding:4px 8px;font-size:12px;cursor:pointer;white-space:nowrap}
-.li-actions button:active{background:#444}
-.li-status{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0}
-.li-status.unknown{background:var(--red)}.li-status.known{background:var(--green)}.li-status.new{background:#555}
-
-/* add page */
-.form-group{margin-bottom:12px}
-.form-group label{font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;display:block}
-.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--card);color:var(--text);border:1px solid #333;border-radius:10px;padding:12px 14px;font-size:15px;font-family:inherit}
-.form-group textarea{min-height:70px;resize:vertical}
-.btn-add{width:100%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;cursor:pointer}
-.btn-add:active{transform:scale(.97)}
-
-/* export page */
-.export-btn{width:100%;background:var(--card);color:var(--text);border:1px solid #333;border-radius:14px;padding:16px;font-size:15px;cursor:pointer;margin-bottom:8px;display:flex;align-items:center;gap:10px}
-.export-btn:active{background:#333}
-.export-btn .ico{font-size:24px}
-.export-info{font-size:12px;color:var(--text2);margin-top:12px;line-height:1.6}
-
-/* swipe hint */
-.swipe-hint{text-align:center;color:#444;font-size:12px;margin-bottom:8px}
+/* eksport */
+fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:.5rem;min-width:0}
+legend{font-weight:600;font-size:.9rem;padding:0;margin-bottom:.4rem}
+.opt{display:flex;align-items:center;gap:.7rem;background:var(--surface);border:1.5px solid var(--line);border-radius:6px;padding:.7rem .8rem;min-height:3rem;cursor:pointer;font-weight:500}
+.opt input{width:1.25rem;height:1.25rem;min-height:0;accent-color:var(--ink);flex:none}
+.opt:has(input:checked){border-color:var(--ink)}
+.opt span{font-variant-numeric:tabular-nums;color:var(--muted);margin-left:auto}
+.csv{font-family:var(--f-mono);font-size:.82rem;line-height:1.5;white-space:pre;overflow-x:auto}
+.save{display:flex;align-items:center;gap:.5rem;margin:0;font-size:.85rem;color:var(--muted)}
+.dot{width:.55rem;height:.55rem;border-radius:50%;background:var(--muted);flex:none}
+.save[data-s="cloud"] .dot{background:var(--das)}
+.save[data-s="fail"] .dot{background:var(--die)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
-</head>
-<body>
-<div class="app">
-<!-- ===== STUDY PAGE ===== -->
-<div class="page active" id="pageStudy">
-  <div class="header">
-    <div class="logo">🇩🇪 Deutsch</div>
-    <div class="streak" id="streakBadge">🔥 0</div>
-  </div>
-  <div class="stats">
-    <div class="stat s-new"><div class="num" id="sNew">0</div><div class="lab">Nowe</div></div>
-    <div class="stat s-know"><div class="num" id="sKnow">0</div><div class="lab">Znam</div></div>
-    <div class="stat s-unk"><div class="num" id="sUnk">0</div><div class="lab">Uczę się</div></div>
-    <div class="stat s-tot"><div class="num" id="sTot">0</div><div class="lab">Łącznie</div></div>
-  </div>
-  <div class="progress"><div class="progress-fill" id="progFill"></div></div>
-  <div class="filters">
-    <select id="fCat" onchange="rebuild()">
-      <option value="">Wszystkie</option>
-      <option>Czasownik</option><option>Słowo</option><option>Zwrot</option><option>Zdanie</option>
-    </select>
-    <select id="fMode" onchange="rebuild()">
-      <option value="all">Wszystkie</option>
-      <option value="new">Nowe</option>
-      <option value="unk">Uczę się</option>
-      <option value="know">Znam</option>
-    </select>
-    <button onclick="shuffleDeck()">🔀</button>
-  </div>
-  <div class="swipe-hint">← przesuń lub kliknij kartę →</div>
-  <div class="card-wrap" id="cardWrap"></div>
-  <div class="actions">
-    <button class="btn-no" onclick="mark('unk')">❌</button>
-    <button class="btn-hard" onclick="mark('hard')">🤔</button>
-    <button class="btn-ok" onclick="mark('ok')">✅</button>
-    <button class="btn-easy" onclick="mark('easy')">⚡</button>
-  </div>
-  <div class="nav">
-    <button onclick="go(-1)">◀ Poprzednia</button>
-    <button onclick="go(1)">Następna ▶</button>
-  </div>
-</div>
 
-<!-- ===== LIST PAGE ===== -->
-<div class="page" id="pageList">
-  <div class="header"><div class="logo">📋 Moja lista</div></div>
-  <div class="list-header">
-    <input type="text" id="listSearch" placeholder="Szukaj..." oninput="renderList()">
-  </div>
-  <div class="list-tabs">
-    <button class="active" onclick="setListTab('all',this)">Wszystkie</button>
-    <button onclick="setListTab('unk',this)">❌ Uczę się</button>
-    <button onclick="setListTab('know',this)">✅ Znam</button>
-    <button onclick="setListTab('new',this)">🆕 Nowe</button>
-    <button onclick="setListTab('custom',this)">✏️ Moje</button>
-  </div>
-  <div id="listBox"></div>
-</div>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1>Deutsch im Alltag</h1>
+      <p>Fiszki w stylu Anki. Czasowniki z formami i przykładami w trzech czasach, słownictwo, zwroty i zdania do tłumaczenia.</p>
+    </div>
+    <div class="stats" aria-label="Postępy">
+      <div class="stat"><b id="stDue">0</b><span>Na dziś</span></div>
+      <div class="stat"><b id="stMature">0</b><span>Dojrzałe</span></div>
+      <div class="stat"><b id="stAll">0</b><span>Kart razem</span></div>
+    </div>
+    <p class="save" id="save" data-s="load"><span class="dot"></span><span id="saveText">Łączę z zapisem…</span></p>
+  </header>
 
-<!-- ===== ADD PAGE ===== -->
-<div class="page" id="pageAdd">
-  <div class="header"><div class="logo">➕ Nowa fiszka</div></div>
-  <div class="form-group"><label>Kategoria</label><select id="addCat"><option>Słowo</option><option>Czasownik</option><option>Zwrot</option><option>Zdanie</option></select></div>
-  <div class="form-group"><label>🇩🇪 Niemiecki</label><input id="addDe" placeholder="np. die Besprechung"></div>
-  <div class="form-group"><label>🇵🇱 Polski</label><input id="addPl" placeholder="np. spotkanie, narada"></div>
-  <div class="form-group"><label>Przykład (DE)</label><textarea id="addEx" placeholder="np. Die Besprechung beginnt um 10 Uhr."></textarea></div>
-  <div class="form-group"><label>Tłumaczenie przykładu</label><textarea id="addExPl" placeholder="Narada zaczyna się o 10."></textarea></div>
-  <div class="form-group"><label>Notatka (formy, czas…)</label><input id="addNote" placeholder="np. die, Pl. -en"></div>
-  <button class="btn-add" onclick="addCard()">Dodaj fiszkę</button>
-</div>
-
-<!-- ===== EXPORT PAGE ===== -->
-<div class="page" id="pageExport">
-  <div class="header"><div class="logo">⬇️ Eksport</div></div>
-  <button class="export-btn" onclick="doExport('unk')"><span class="ico">📌</span><span>Eksport: Uczę się (CSV)</span></button>
-  <button class="export-btn" onclick="doExport('know')"><span class="ico">✅</span><span>Eksport: Znam (CSV)</span></button>
-  <button class="export-btn" onclick="doExport('all')"><span class="ico">📚</span><span>Eksport: Cała talia (CSV)</span></button>
-  <button class="export-btn" onclick="doExport('custom')"><span class="ico">✏️</span><span>Eksport: Moje fiszki (CSV)</span></button>
-  <div class="export-info">
-    <strong>Import do Anki:</strong><br>
-    Plik → Importuj → wybierz CSV.<br>
-    Separator: przecinek. Kodowanie: UTF-8.<br>
-    Kolumny: DE | PL | Przykład DE | Przykład PL | Notatka | Kategoria
+  <div class="tabs" role="tablist" aria-label="Widoki">
+    <button class="tab" role="tab" id="t-study" data-tab="study" aria-selected="true" aria-controls="v-study">Nauka</button>
+    <button class="tab" role="tab" id="t-add" data-tab="add" aria-selected="false" aria-controls="v-add">Dodaj</button>
+    <button class="tab" role="tab" id="t-list" data-tab="list" aria-selected="false" aria-controls="v-list">Karty</button>
+    <button class="tab" role="tab" id="t-export" data-tab="export" aria-selected="false" aria-controls="v-export">CSV</button>
   </div>
-</div>
 
-<!-- BOTTOM NAV -->
-<div class="bottom-nav">
-  <button class="active" onclick="showPage('pageStudy',this)"><span class="ico">📖</span>Nauka</button>
-  <button onclick="showPage('pageList',this)"><span class="ico">📋</span>Lista</button>
-  <button onclick="showPage('pageAdd',this)"><span class="ico">➕</span>Dodaj</button>
-  <button onclick="showPage('pageExport',this)"><span class="ico">⬇️</span>Eksport</button>
-</div>
+  <!-- NAUKA -->
+  <section class="panel" id="v-study" role="tabpanel" aria-labelledby="t-study">
+    <div class="bar">
+      <div class="pickers">
+        <div><label class="sr" for="deckSel">Talia</label><select id="deckSel"></select></div>
+        <div><label class="sr" for="newSel">Nowe karty dziennie</label>
+          <select id="newSel">
+            <option value="5">Nowe dziennie: 5</option>
+            <option value="10">Nowe dziennie: 10</option>
+            <option value="20">Nowe dziennie: 20</option>
+            <option value="50">Nowe dziennie: 50</option>
+            <option value="100">Nowe dziennie: 100</option>
+          </select>
+        </div>
+      </div>
+      <div class="counts" aria-label="Liczniki kart">
+        <span class="cnt c-new" id="kNew"><b id="nNew">0</b><i>Nowe</i></span>
+        <span class="cnt c-learn" id="kLearn"><b id="nLearn">0</b><i>W nauce</i></span>
+        <span class="cnt c-rev" id="kRev"><b id="nRev">0</b><i>Powtórki</i></span>
+      </div>
+    </div>
+
+    <div id="studyCard" class="panel">
+      <article class="sign" aria-live="polite">
+        <div class="sign-top">
+          <div class="tags"><span class="tag" id="cTag"></span><span class="tag alt" id="cType"></span></div>
+          <button class="icon-btn" id="speak" type="button" aria-label="Posłuchaj wymowy" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+          </button>
+        </div>
+        <div class="front">
+          <p class="de" id="cFront"></p>
+          <p class="sub" id="cSub" hidden></p>
+        </div>
+        <div class="back" id="cBack" hidden>
+          <p class="pl" id="cMain"></p>
+          <p class="info" id="cInfo" hidden></p>
+          <div class="exs" id="cExs"></div>
+        </div>
+        <div class="sign-foot"><span id="cStatus"></span><span id="cHelp"></span></div>
+      </article>
+      <div class="actions" id="revealRow">
+        <button class="btn primary big" id="reveal" type="button">Pokaż odpowiedź</button>
+      </div>
+      <div class="rates" id="rateRow" hidden>
+        <button class="rate r1" type="button" data-r="1"><span class="iv" id="iv1"></span><span>Jeszcze raz</span></button>
+        <button class="rate r2" type="button" data-r="2"><span class="iv" id="iv2"></span><span>Trudne</span></button>
+        <button class="rate r3" type="button" data-r="3"><span class="iv" id="iv3"></span><span>Dobrze</span></button>
+        <button class="rate r4" type="button" data-r="4"><span class="iv" id="iv4"></span><span>Łatwe</span></button>
+      </div>
+      <p class="legend" id="modeNote" hidden>Ćwiczenie poza planem: harmonogram powtórek się nie zmienia.</p>
+      <div class="actions" id="exitFree" hidden><button class="btn ghost" id="exitFreeBtn" type="button">Wróć do planu</button></div>
+      <p class="legend">Spacja pokazuje odpowiedź, klawisze 1–4 oceniają kartę. <span class="art art-der">der</span> rodzaj męski · <span class="art art-die">die</span> żeński i liczba mnoga · <span class="art art-das">das</span> nijaki.</p>
+    </div>
+
+    <div class="empty" id="studyEmpty" hidden>
+      <h2>Na dziś wszystko zrobione</h2>
+      <p id="emptyText"></p>
+      <div class="actions">
+        <button class="btn primary" id="moreNew" type="button" hidden>Dodaj 10 nowych kart na dziś</button>
+        <button class="btn ghost" id="freeBtn" type="button">Ćwicz poza planem</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- DODAJ -->
+  <section class="panel" id="v-add" role="tabpanel" aria-labelledby="t-add" hidden>
+    <form id="addForm" autocomplete="off">
+      <div>
+        <label for="f-type">Rodzaj karty</label>
+        <select id="f-type">
+          <option value="word">Słowo (rzeczownik, przymiotnik, przysłówek)</option>
+          <option value="verb">Czasownik</option>
+          <option value="phrase">Zwrot</option>
+          <option value="sentence">Zdanie do tłumaczenia</option>
+        </select>
+      </div>
+      <div>
+        <label for="f-de" id="l-de">Słowo po niemiecku (z rodzajnikiem)</label>
+        <input id="f-de" lang="de" required maxlength="200" placeholder="np. die Haltestelle">
+      </div>
+      <div>
+        <label for="f-pl" id="l-pl">Znaczenie po polsku</label>
+        <input id="f-pl" required maxlength="200" placeholder="np. przystanek">
+      </div>
+      <div>
+        <label for="f-info" id="l-info">Liczba mnoga (opcjonalnie)</label>
+        <input id="f-info" maxlength="200" placeholder="np. Pl.: die Haltestellen">
+      </div>
+      <div id="g-ex">
+        <div>
+          <label for="f-exde" id="l-exde">Przykład w zdaniu po niemiecku</label>
+          <input id="f-exde" lang="de" maxlength="300" placeholder="np. Die Haltestelle ist gleich um die Ecke.">
+        </div>
+        <div>
+          <label for="f-expl">Tłumaczenie przykładu</label>
+          <input id="f-expl" maxlength="300" placeholder="np. Przystanek jest zaraz za rogiem.">
+        </div>
+        <div>
+          <label for="f-tense">Czas przykładu (opcjonalnie)</label>
+          <input id="f-tense" maxlength="40" placeholder="np. Präsens, Perfekt">
+        </div>
+      </div>
+      <div>
+        <label for="f-cat">Kategoria</label>
+        <input id="f-cat" list="catList" maxlength="60" value="Moje słowa">
+        <datalist id="catList"></datalist>
+      </div>
+      <button class="btn primary big" type="submit">Zapisz kartę</button>
+      <p class="msg" id="addMsg" role="status"></p>
+    </form>
+    <form id="impForm" autocomplete="off">
+      <div>
+        <label for="imp">Import zbiorczy: wklej gotowe karty</label>
+        <textarea class="imp" id="imp" rows="7" spellcheck="false" placeholder="czasownik | abholen | odbierać | holt ab · holte ab · hat abgeholt | Czasowniki | Ich hole dich ab. | Odbiorę cię. | Er holte mich ab. | Odebrał mnie. | Ich habe sie abgeholt. | Odebrałem ją."></textarea>
+        <p class="hint">Jedna karta w wierszu, pola oddzielone znakiem |. Możesz też wkleić tablicę JSON w formacie talii.</p>
+        <p class="fmt">typ | niemiecki | polski | formy lub uwagi | kategoria | przykład DE | przykład PL | (do 3 przykładów)
+typ: słowo, czasownik, zwrot lub zdanie
+zdanie: zdanie | niemieckie | polskie | reguła | kategoria | czas
+słowo i czasownik wymagają przykładu</p>
+      </div>
+      <button class="btn primary big" type="submit">Importuj karty</button>
+      <p class="msg" id="impMsg" role="status"></p>
+    </form>
+  </section>
+
+  <!-- KARTY -->
+  <section class="panel" id="v-list" role="tabpanel" aria-labelledby="t-list" hidden>
+    <div>
+      <label class="sr" for="q">Szukaj</label>
+      <input id="q" type="search" placeholder="Szukaj po niemiecku lub po polsku">
+    </div>
+    <div class="filters">
+      <div class="chips" role="group" aria-label="Filtr">
+        <button class="chip" type="button" data-f="custom" aria-pressed="true" id="chCustom">Moje</button>
+        <button class="chip" type="button" data-f="hard" aria-pressed="false" id="chHard">Trudne</button>
+        <button class="chip" type="button" data-f="all" aria-pressed="false" id="chAll">Wszystkie</button>
+      </div>
+      <div>
+        <label class="sr" for="typeSel">Rodzaj</label>
+        <select id="typeSel">
+          <option value="">Wszystkie rodzaje</option>
+          <option value="verb">Czasowniki</option>
+          <option value="word">Słownictwo</option>
+          <option value="phrase">Zwroty</option>
+          <option value="sentence">Zdania</option>
+        </select>
+      </div>
+    </div>
+    <ul class="rows" id="rows"></ul>
+    <div class="empty" id="listEmpty" hidden><p id="listEmptyText"></p></div>
+  </section>
+
+  <!-- CSV -->
+  <section class="panel" id="v-export" role="tabpanel" aria-labelledby="t-export" hidden>
+    <fieldset>
+      <legend>Co wyeksportować</legend>
+      <label class="opt"><input type="radio" name="set" value="custom" checked> Moje karty <span id="nCustom"></span></label>
+      <label class="opt"><input type="radio" name="set" value="hard"> Trudne (raz lub więcej „Jeszcze raz”) <span id="nHard"></span></label>
+      <label class="opt"><input type="radio" name="set" value="all"> Wszystkie karty <span id="nAllExp"></span></label>
+    </fieldset>
+    <fieldset>
+      <legend>Format</legend>
+      <label class="opt"><input type="radio" name="fmt" value="anki" checked> Do importu w Anki (przód, tył, tagi)</label>
+      <label class="opt"><input type="radio" name="fmt" value="sheet"> Arkusz (wszystkie kolumny)</label>
+    </fieldset>
+    <div>
+      <label for="csvOut">Podgląd pliku</label>
+      <textarea class="csv" id="csvOut" rows="8" readonly spellcheck="false"></textarea>
+      <p class="hint" id="fmtHint"></p>
+    </div>
+    <div class="actions two">
+      <button class="btn primary big" id="dl" type="button" hidden>Pobierz CSV</button>
+      <button class="btn ghost big" id="copy" type="button">Kopiuj</button>
+    </div>
+    <p class="msg" id="expMsg" role="status"></p>
+  </section>
 </div>
 
 <script>
-// ============================================================
-//  BAZA FISZEK  (~150)
-// ============================================================
-const BASE=[
-// [kategoria, de, pl, przykładDE, przykładPL, notatka]
-// --- CZASOWNIKI ---
-["Czasownik","gehen","iść, chodzić","Ich gehe heute Abend ins Kino.","Dziś wieczorem idę do kina.","geht–ging–ist gegangen"],
-["Czasownik","kommen","przychodzić","Kommst du morgen zur Party?","Przyjdziesz jutro na imprezę?","kommt–kam–ist gekommen"],
-["Czasownik","machen","robić","Was machst du am Wochenende?","Co robisz w weekend?","macht–machte–hat gemacht"],
-["Czasownik","sehen","widzieć","Hast du den neuen Film gesehen?","Widziałeś nowy film?","sieht–sah–hat gesehen"],
-["Czasownik","essen","jeść","Wir haben gestern Pizza gegessen.","Wczoraj jedliśmy pizzę.","isst–aß–hat gegessen"],
-["Czasownik","trinken","pić","Möchtest du etwas trinken?","Chcesz coś do picia?","trinkt–trank–hat getrunken"],
-["Czasownik","brauchen","potrzebować","Ich brauche noch fünf Minuten.","Potrzebuję jeszcze 5 minut.","braucht–brauchte–hat gebraucht"],
-["Czasownik","wissen","wiedzieć","Ich weiß es leider nicht.","Niestety nie wiem.","weiß–wusste–hat gewusst"],
-["Czasownik","vergessen","zapominać","Ich habe deinen Geburtstag vergessen.","Zapomniałem o twoich urodzinach.","vergisst–vergaß–hat vergessen"],
-["Czasownik","verstehen","rozumieć","Ich verstehe dich nicht, sprich bitte langsamer.","Nie rozumiem cię, mów wolniej.","versteht–verstand–hat verstanden"],
-["Czasownik","warten auf +Akk","czekać na","Ich warte seit zehn Minuten auf den Bus.","Czekam na autobus od 10 min.","wartet–wartete–hat gewartet"],
-["Czasownik","bekommen","dostawać","Hast du meine Nachricht bekommen?","Dostałeś moją wiadomość?","bekommt–bekam–hat bekommen"],
-["Czasownik","anrufen","dzwonić do","Ich rufe dich später an.","Zadzwonię do ciebie później.","rozdzielny: ruft an–rief an–hat angerufen"],
-["Czasownik","mitnehmen","zabierać ze sobą","Soll ich dir etwas vom Supermarkt mitnehmen?","Mam ci coś przynieść ze sklepu?","nimmt mit–nahm mit–hat mitgenommen"],
-["Czasownik","sich treffen","spotykać się","Wir treffen uns um acht vor dem Café.","Spotykamy się o 8 przed kawiarnią.","trifft–traf–hat getroffen"],
-["Czasownik","finden","znajdować; uważać","Ich finde meinen Schlüssel nicht.","Nie mogę znaleźć klucza.","findet–fand–hat gefunden"],
-["Czasownik","bleiben","zostawać","Heute bleibe ich zu Hause.","Dziś zostaję w domu.","bleibt–blieb–ist geblieben"],
-["Czasownik","fahren","jechać","Wir fahren mit dem Zug nach Berlin.","Jedziemy pociągiem do Berlina.","fährt–fuhr–ist gefahren"],
-["Czasownik","helfen +Dat","pomagać","Kannst du mir bitte helfen?","Możesz mi pomóc?","hilft–half–hat geholfen"],
-["Czasownik","sich freuen auf +Akk","cieszyć się na","Ich freue mich auf das Wochenende.","Cieszę się na weekend.","freut sich–freute sich–hat sich gefreut"],
-["Czasownik","sich erinnern an +Akk","przypominać sobie","Erinnerst du dich an ihn?","Pamiętasz go?","erinnert sich–erinnerte sich–hat sich erinnert"],
-["Czasownik","anfangen","zaczynać","Der Film fängt um 20 Uhr an.","Film zaczyna się o 20.","fängt an–fing an–hat angefangen"],
-["Czasownik","aufstehen","wstawać","Ich stehe jeden Tag um sieben auf.","Wstaję codziennie o 7.","steht auf–stand auf–ist aufgestanden"],
-["Czasownik","müssen","musieć","Ich muss morgen früh aufstehen.","Muszę jutro wcześnie wstać.","muss–musste–hat gemusst"],
-["Czasownik","können","móc, umieć","Kannst du Auto fahren?","Umiesz prowadzić samochód?","kann–konnte–hat gekonnt"],
-["Czasownik","wollen","chcieć","Ich wollte dich gerade anrufen!","Właśnie chciałem do ciebie dzwonić!","will–wollte–hat gewollt"],
-["Czasownik","kaufen","kupować","Ich habe ein neues Handy gekauft.","Kupiłem nowy telefon.","kauft–kaufte–hat gekauft"],
-["Czasownik","abholen","odbierać","Kannst du mich vom Bahnhof abholen?","Możesz mnie odebrać z dworca?","holt ab–holte ab–hat abgeholt"],
-["Czasownik","vorbeikommen","wpaść z wizytą","Komm doch am Sonntag vorbei!","Wpadnij w niedzielę!","kommt vorbei–kam vorbei–ist vorbeigekommen"],
-["Czasownik","klappen","udać się","Hat alles geklappt?","Wszystko się udało?","klappt–klappte–hat geklappt"],
-["Czasownik","schlafen","spać","Ich habe letzte Nacht schlecht geschlafen.","Ostatniej nocy źle spałem.","schläft–schlief–hat geschlafen"],
-["Czasownik","laufen","biegać, chodzić","Er läuft jeden Morgen fünf Kilometer.","Biega codziennie rano 5 km.","läuft–lief–ist gelaufen"],
-["Czasownik","sprechen","mówić, rozmawiać","Sprechen Sie Deutsch?","Czy mówi Pan/Pani po niemiecku?","spricht–sprach–hat gesprochen"],
-["Czasownik","lesen","czytać","Ich lese gerade ein spannendes Buch.","Czytam właśnie fascynującą książkę.","liest–las–hat gelesen"],
-["Czasownik","schreiben","pisać","Schreib mir eine Nachricht!","Napisz mi wiadomość!","schreibt–schrieb–hat geschrieben"],
-["Czasownik","nehmen","brać","Ich nehme den Salat, bitte.","Poproszę sałatkę.","nimmt–nahm–hat genommen"],
-["Czasownik","geben","dawać","Gibst du mir bitte das Salz?","Podasz mi sól?","gibt–gab–hat gegeben"],
-["Czasownik","denken","myśleć","Ich denke oft an dich.","Często o tobie myślę.","denkt–dachte–hat gedacht"],
-["Czasownik","bringen","przynosić","Ich bringe dir morgen das Buch.","Przyniosę ci jutro książkę.","bringt–brachte–hat gebracht"],
-["Czasownik","stellen","stawiać","Stell die Flasche auf den Tisch.","Postaw butelkę na stole.","stellt–stellte–hat gestellt"],
-["Czasownik","legen","kłaść","Leg das Handy bitte weg.","Odłóż proszę telefon.","legt–legte–hat gelegt"],
-["Czasownik","sich setzen","siadać","Setz dich bitte hin.","Usiądź proszę.","setzt sich–setzte sich–hat sich gesetzt"],
-["Czasownik","aufhören","przestawać","Hör bitte auf zu reden!","Przestań proszę gadać!","hört auf–hörte auf–hat aufgehört"],
-["Czasownik","sich anziehen","ubierać się","Zieh dich warm an, es ist kalt!","Ubierz się ciepło, jest zimno!","zieht an–zog an–hat angezogen"],
-["Czasownik","einkaufen","robić zakupy","Ich muss noch einkaufen gehen.","Muszę jeszcze iść na zakupy.","kauft ein–kaufte ein–hat eingekauft"],
-["Czasownik","bestellen","zamawiać","Ich möchte bitte bestellen.","Chciałbym zamówić.","bestellt–bestellte–hat bestellt"],
-["Czasownik","bezahlen","płacić","Kann ich mit Karte bezahlen?","Mogę zapłacić kartą?","bezahlt–bezahlte–hat bezahlt"],
-["Czasownik","empfehlen","polecać","Können Sie mir etwas empfehlen?","Może mi Pan coś polecić?","empfiehlt–empfahl–hat empfohlen"],
-["Czasownik","umziehen","przeprowadzać się","Wir ziehen nächsten Monat um.","Przeprowadzamy się w przyszłym miesiącu.","zieht um–zog um–ist umgezogen"],
-["Czasownik","sich entscheiden","decydować się","Ich kann mich nicht entscheiden.","Nie mogę się zdecydować.","entscheidet–entschied–hat entschieden"],
-["Czasownik","versprechen","obiecywać","Ich verspreche dir, pünktlich zu sein.","Obiecuję ci, że będę punktualny.","verspricht–versprach–hat versprochen"],
-["Czasownik","sich beschweren","skarżyć się","Er beschwert sich immer über das Wetter.","On zawsze narzeka na pogodę.","beschwert sich–beschwerte sich–hat sich beschwert"],
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)};
+var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
 
-// --- SŁOWA ---
-["Słowo","die Verspätung","spóźnienie, opóźnienie","Der Zug hat zehn Minuten Verspätung.","Pociąg ma 10 minut opóźnienia.","die, Pl. -en"],
-["Słowo","der Termin","termin, wizyta","Ich habe um drei einen Termin beim Arzt.","O 3 mam wizytę u lekarza.","der, Pl. -e"],
-["Słowo","die Rechnung","rachunek","Die Rechnung, bitte!","Poproszę rachunek!","die, Pl. -en"],
-["Słowo","der Feierabend","koniec dnia pracy","Ich mache jetzt Feierabend.","Kończę teraz pracę.","der"],
-["Słowo","anstrengend","męczący","Die Arbeit war heute sehr anstrengend.","Praca była dziś bardzo męcząca.","przymiotnik"],
-["Słowo","eigentlich","właściwie","Eigentlich wollte ich zu Hause bleiben.","Właściwie chciałem zostać w domu.","partykuła"],
-["Słowo","trotzdem","mimo to","Es regnet, trotzdem gehen wir spazieren.","Pada, mimo to idziemy na spacer.","po trotzdem: V na 1. miejscu"],
-["Słowo","übrigens","a propos, przy okazji","Übrigens, hast du Max gesehen?","A propos, widziałeś Maxa?","przysłówek"],
-["Słowo","sowieso","i tak","Ich muss sowieso einkaufen gehen.","I tak muszę iść na zakupy.","przysłówek"],
-["Słowo","ziemlich","dość, całkiem","Es ist heute ziemlich kalt.","Jest dziś dość zimno.","przysłówek"],
-["Słowo","gleich","zaraz","Ich bin gleich da.","Zaraz będę.","przysłówek"],
-["Słowo","bestimmt","na pewno","Das klappt bestimmt.","To na pewno się uda.","przysłówek"],
-["Słowo","der Einkauf","zakup(y)","Hilfst du mir mit dem Einkauf?","Pomożesz mi z zakupami?","der, Pl. Einkäufe"],
-["Słowo","die Haltestelle","przystanek","Wo ist die nächste Haltestelle?","Gdzie jest najbliższy przystanek?","die, Pl. -n"],
-["Słowo","der Schlüssel","klucz","Wo ist mein Schlüssel?","Gdzie jest mój klucz?","der, Pl. –"],
-["Słowo","neulich","niedawno","Neulich habe ich Anna in der Stadt getroffen.","Niedawno spotkałem Annę w mieście.","przysłówek"],
-["Słowo","leider","niestety","Leider habe ich keine Zeit.","Niestety nie mam czasu.","przysłówek"],
-["Słowo","günstig","tani, korzystny cenowo","Das Restaurant ist günstig und gut.","Restauracja jest tania i dobra.","przymiotnik"],
-["Słowo","lecker","smaczny","Die Suppe ist richtig lecker.","Zupa jest naprawdę smaczna.","przymiotnik"],
-["Słowo","müde","zmęczony","Ich bin heute total müde.","Jestem dziś totalnie zmęczony.","przymiotnik"],
-["Słowo","die Verabredung","umówione spotkanie","Ich habe heute Abend eine Verabredung.","Mam dziś wieczorem spotkanie.","die, Pl. -en"],
-["Słowo","der Kollege / die Kollegin","kolega/koleżanka z pracy","Meine Kollegin hat mir geholfen.","Moja koleżanka mi pomogła.","der/die"],
-["Słowo","die Nachricht","wiadomość","Ich habe dir eine Nachricht geschickt.","Wysłałem ci wiadomość.","die, Pl. -en"],
-["Słowo","die Tüte","torba, reklamówka","Brauchen Sie eine Tüte?","Potrzebuje Pan torbę?","die, Pl. -n"],
-["Słowo","ausverkauft","wyprzedany","Die Karten sind leider ausverkauft.","Bilety są niestety wyprzedane.","przymiotnik"],
-["Słowo","der Vorschlag","propozycja","Das ist ein guter Vorschlag.","To dobra propozycja.","der, Pl. Vorschläge"],
-["Słowo","die Wohnung","mieszkanie","Meine Wohnung hat drei Zimmer.","Moje mieszkanie ma 3 pokoje.","die, Pl. -en"],
-["Słowo","die Erfahrung","doświadczenie","Hast du Erfahrung mit Computern?","Masz doświadczenie z komputerami?","die, Pl. -en"],
-["Słowo","die Auskunft","informacja","Können Sie mir eine Auskunft geben?","Czy może mi Pan udzielić informacji?","die, Pl. Auskünfte"],
-["Słowo","der Stau","korek (drogowy)","Wir stehen seit einer Stunde im Stau.","Stoimy w korku od godziny.","der, Pl. -s"],
-["Słowo","die Ermäßigung","zniżka","Gibt es eine Ermäßigung für Studenten?","Czy jest zniżka dla studentów?","die, Pl. -en"],
-["Słowo","das Angebot","oferta, promocja","Das Angebot gilt nur bis Freitag.","Oferta ważna jest tylko do piątku.","das, Pl. -e"],
-["Słowo","unbedingt","koniecznie","Du musst unbedingt diesen Film sehen!","Musisz koniecznie zobaczyć ten film!","przysłówek"],
-["Słowo","wahrscheinlich","prawdopodobnie","Er kommt wahrscheinlich später.","On prawdopodobnie przyjdzie później.","przysłówek"],
-["Słowo","normalerweise","zwykle","Normalerweise stehe ich um sieben auf.","Zwykle wstaję o siódmej.","przysłówek"],
-["Słowo","ungefähr","mniej więcej, około","Das dauert ungefähr zwei Stunden.","To trwa mniej więcej 2 godziny.","przysłówek"],
-["Słowo","die Quittung","paragon","Kann ich bitte eine Quittung haben?","Mogę prosić o paragon?","die, Pl. -en"],
-["Słowo","das Trinkgeld","napiwek","Geben wir dem Kellner ein Trinkgeld?","Damy kelnerowi napiwek?","das, Pl. -er"],
-["Słowo","der Umweg","objazd, droga okólna","Wir müssen leider einen Umweg fahren.","Musimy niestety jechać objazdem.","der, Pl. -e"],
-["Słowo","gemütlich","przytulny","Deine Wohnung ist sehr gemütlich.","Twoje mieszkanie jest bardzo przytulne.","przymiotnik"],
-["Słowo","schrecklich","straszny, okropny","Das Wetter ist heute schrecklich.","Pogoda jest dziś okropna.","przymiotnik"],
+/* Talia startowa: [rodzaj, niemiecki, polski, info, [[czas, zdanie DE, zdanie PL]…], kategoria, czas zdania]. Nowe karty dopisuj tylko na końcu. */
+var DECK=[["verb","gehen","iść, chodzić","geht · ging · ist gegangen",[["Präsens","Ich gehe jeden Tag zu Fuß zur Arbeit.","Chodzę codziennie do pracy pieszo."],["Präteritum","Gestern ging ich früh nach Hause.","Wczoraj poszedłem wcześnie do domu."],["Perfekt","Wir sind gestern ins Kino gegangen.","Poszliśmy wczoraj do kina."]],"Czasowniki",""],["word","halt","no cóż, po prostu (pogodzenie się z faktem)","partykuła",[["","Das ist halt so.","Tak już jest."]],"Partikuły",""],["phrase","Das ist nicht mein Bier","To nie moja sprawa (dosł. nie moje piwo)","",[["","Streit im Büro? Das ist nicht mein Bier.","Kłótnia w biurze? To nie moja sprawa."]],"Potoczne zwroty",""],["sentence","Ich arbeite seit drei Jahren bei einer Firma in Köln.","Pracuję od trzech lat w firmie w Kolonii.","seit + Dativ + Präsens: czynność trwa od pewnego czasu aż do teraz (po polsku też czas teraźniejszy).",[],"Zdania w czasach","Präsens"],["word","eben","po prostu, właśnie (nie ma wyjścia)","partykuła",[["","Dann nehmen wir eben den nächsten Zug.","To pojedziemy po prostu następnym pociągiem."]],"Partikuły",""],["phrase","Ich drücke dir die Daumen","Trzymam za ciebie kciuki","",[["","Morgen ist deine Prüfung, ich drücke dir die Daumen!","Jutro masz egzamin, trzymam kciuki!"]],"Potoczne zwroty",""],["verb","kommen","przychodzić, przyjeżdżać","kommt · kam · ist gekommen",[["Präsens","Der Bus kommt in fünf Minuten.","Autobus przyjedzie za pięć minut."],["Präteritum","Sie kam zu spät zum Meeting.","Spóźniła się na spotkanie."],["Perfekt","Ist er schon nach Hause gekommen?","Czy on już wrócił do domu?"]],"Czasowniki",""],["word","doch","ależ tak, jednak (sprzeciw wobec przeczenia)","partykuła",[["","Du kommst nicht mit? – Doch, ich komme!","Nie idziesz z nami? – Ależ idę!"]],"Partikuły",""],["phrase","auf dem Schlauch stehen","nie móc zrozumieć, mieć zaćmienie","",[["","Sorry, ich stehe gerade total auf dem Schlauch.","Przepraszam, mam teraz kompletne zaćmienie."]],"Potoczne zwroty",""],["sentence","Morgen fahre ich nach Wien.","Jutro jadę do Wiednia.","Przyszłość często wyraża się Präsens z okolicznikiem czasu (morgen, nächste Woche).",[],"Zdania w czasach","Präsens jako przyszłość"],["word","mal","(łagodzi prośbę lub polecenie)","partykuła",[["","Kannst du mir mal kurz helfen?","Pomożesz mi na chwilę?"]],"Partikuły",""],["phrase","jemandem einen Korb geben","dać komuś kosza, odrzucić zaloty","",[["","Sie hat ihm beim ersten Date einen Korb gegeben.","Na pierwszej randce dała mu kosza."]],"Potoczne zwroty",""],["verb","machen","robić","macht · machte · hat gemacht",[["Präsens","Was machst du am Wochenende?","Co robisz w weekend?"],["Präteritum","Er machte jeden Morgen Sport.","Codziennie rano uprawiał sport."],["Perfekt","Hast du die Hausaufgaben gemacht?","Odrobiłeś zadanie domowe?"]],"Czasowniki",""],["word","ja","przecież, wiesz (coś oczywistego)","partykuła",[["","Das weißt du ja schon.","Przecież już to wiesz."]],"Partikuły",""],["phrase","Das geht mir auf die Nerven","To działa mi na nerwy","",[["","Dieser Lärm geht mir echt auf die Nerven.","Ten hałas naprawdę działa mi na nerwy."]],"Potoczne zwroty",""],["sentence","Als ich jung war, wohnte ich auf dem Land.","Gdy byłem młody, mieszkałem na wsi.","Präteritum: opowiadanie i teksty pisane. Sein, haben i czasowniki modalne używa się w nim także w mowie.",[],"Zdania w czasach","Präteritum"],["word","schon","na pewno, spokojnie (uspokajająco)","partykuła",[["","Das wird schon klappen.","Na pewno się uda."]],"Partikuły",""],["phrase","die Nase voll haben","mieć dość","",[["","Ich habe die Nase voll von diesem Wetter.","Mam dość tej pogody."]],"Potoczne zwroty",""],["verb","sehen","widzieć","sieht · sah · hat gesehen",[["Präsens","Siehst du das Schild da hinten?","Widzisz tamten znak z tyłu?"],["Präteritum","Ich sah ihn an der Haltestelle stehen.","Zobaczyłem go stojącego na przystanku."],["Perfekt","Wir haben den Film schon zweimal gesehen.","Widzieliśmy ten film już dwa razy."]],"Czasowniki",""],["word","echt","naprawdę (potocznie)","partykuła",[["","Das war echt anstrengend.","To było naprawdę męczące."]],"Partikuły",""],["phrase","Mir fällt ein Stein vom Herzen","Spada mi kamień z serca","",[["","Als die Zusage kam, ist mir ein Stein vom Herzen gefallen.","Gdy przyszło potwierdzenie, spadł mi kamień z serca."]],"Potoczne zwroty",""],["sentence","Gestern habe ich lange mit meiner Mutter telefoniert.","Wczoraj długo rozmawiałem z mamą przez telefon.","Perfekt: haben + Partizip II na końcu zdania. Typowy czas mowy o przeszłości.",[],"Zdania w czasach","Perfekt (haben)"],["word","die Anmeldung","zameldowanie, rejestracja","Pl.: die Anmeldungen",[["","Für die Anmeldung brauchen Sie den Mietvertrag.","Do zameldowania potrzebuje Pan lub Pani umowy najmu."]],"Urzędy i mieszkanie",""],["phrase","Meiner Meinung nach","moim zdaniem","",[["","Meiner Meinung nach ist der Plan zu riskant.","Moim zdaniem ten plan jest zbyt ryzykowny."]],"Opinie i dyskusja",""],["verb","nehmen","brać","nimmt · nahm · hat genommen",[["Präsens","Ich nehme den Kaffee ohne Zucker.","Biorę kawę bez cukru."],["Präteritum","Sie nahm sich einen Tag frei.","Wzięła sobie dzień wolnego."],["Perfekt","Hast du den Schlüssel genommen?","Wziąłeś klucz?"]],"Czasowniki",""],["word","die Nebenkosten","opłaty dodatkowe (media, eksploatacja)","tylko liczba mnoga",[["","Sind die Nebenkosten in der Miete enthalten?","Czy opłaty dodatkowe są wliczone w czynsz?"]],"Urzędy i mieszkanie",""],["phrase","Da bin ich anderer Meinung","Mam na ten temat inne zdanie","",[["","Da bin ich anderer Meinung, und zwar aus zwei Gründen.","Mam inne zdanie, i to z dwóch powodów."]],"Opinie i dyskusja",""],["sentence","Am Samstag sind wir spontan nach Dresden gefahren.","W sobotę spontanicznie pojechaliśmy do Drezna.","Ruch i zmiana stanu tworzą Perfekt z sein (fahren, gehen, aufstehen, werden).",[],"Zdania w czasach","Perfekt (sein)"],["word","die Kaution","kaucja","Pl.: die Kautionen",[["","Die Kaution beträgt drei Monatsmieten.","Kaucja wynosi trzykrotność miesięcznego czynszu."]],"Urzędy i mieszkanie",""],["phrase","Das kommt darauf an","to zależy","",[["","Ziehst du nach Berlin? – Das kommt darauf an, ob ich den Job bekomme.","Przeprowadzasz się do Berlina? – To zależy, czy dostanę pracę."]],"Opinie i dyskusja",""],["verb","geben","dawać (es gibt = jest, są)","gibt · gab · hat gegeben",[["Präsens","Gibst du mir bitte das Salz?","Podasz mi sól?"],["Präteritum","Der Chef gab mir eine zweite Chance.","Szef dał mi drugą szansę."],["Perfekt","Er hat mir seine Nummer gegeben.","Dał mi swój numer."]],"Czasowniki",""],["word","die Hausverwaltung","zarządca nieruchomości","Pl.: die Hausverwaltungen",[["","Ich habe die Hausverwaltung schon zweimal angerufen.","Dzwoniłem już dwa razy do zarządcy nieruchomości."]],"Urzędy i mieszkanie",""],["phrase","Ich sehe das ähnlich","Widzę to podobnie","",[["","Ich sehe das ähnlich, aber nicht ganz.","Widzę to podobnie, ale nie do końca."]],"Opinie i dyskusja",""],["sentence","Hast du schon gegessen? – Nein, ich habe noch nichts gegessen.","Jadłeś już? – Nie, jeszcze nic nie jadłem.","Partizip II czasowników mocnych: essen → gegessen. Trzeba je znać na pamięć.",[],"Zdania w czasach","Perfekt z pytaniem"],["word","das Bürgeramt","urząd miasta (obsługa mieszkańców)","Pl.: die Bürgerämter",[["","Ohne Termin im Bürgeramt geht gar nichts.","Bez umówionej wizyty w urzędzie miasta nic się nie załatwi."]],"Urzędy i mieszkanie",""],["phrase","ehrlich gesagt","szczerze mówiąc","",[["","Ehrlich gesagt hatte ich mehr erwartet.","Szczerze mówiąc, spodziewałem się więcej."]],"Opinie i dyskusja",""],["verb","finden","znajdować; uważać za","findet · fand · hat gefunden",[["Präsens","Ich finde den Plan ziemlich gut.","Uważam ten plan za całkiem dobry."],["Präteritum","Wir fanden schnell eine Lösung.","Szybko znaleźliśmy rozwiązanie."],["Perfekt","Hast du deine Brille gefunden?","Znalazłeś swoje okulary?"]],"Czasowniki",""],["word","die Erfahrung","doświadczenie","Pl.: die Erfahrungen",[["","Ich habe schon zwei Jahre Erfahrung in diesem Bereich.","Mam już dwa lata doświadczenia w tej dziedzinie."]],"Słownictwo ogólne",""],["phrase","Es liegt auf der Hand, dass …","Jest oczywiste, że …","",[["","Es liegt auf der Hand, dass wir mehr Zeit brauchen.","Jest oczywiste, że potrzebujemy więcej czasu."]],"Opinie i dyskusja",""],["sentence","Ich habe mich auf den Urlaub gefreut.","Cieszyłem się na urlop.","Czasowniki zwrotne mają Perfekt z haben: ich habe mich gefreut.",[],"Zdania w czasach","Perfekt zwrotny"],["word","der Vorschlag","propozycja","Pl.: die Vorschläge",[["","Ich habe einen Vorschlag: Wir treffen uns um acht.","Mam propozycję: spotkajmy się o ósmej."]],"Słownictwo ogólne",""],["phrase","einerseits … andererseits …","z jednej strony … z drugiej strony …","",[["","Einerseits ist es teuer, andererseits spart man Zeit.","Z jednej strony jest drogo, z drugiej oszczędza się czas."]],"Opinie i dyskusja",""],["verb","bleiben","zostawać","bleibt · blieb · ist geblieben",[["Präsens","Heute bleibe ich zu Hause.","Dziś zostaję w domu."],["Präteritum","Wir blieben noch eine Stunde im Café.","Zostaliśmy w kawiarni jeszcze godzinę."],["Perfekt","Sie ist gestern lange im Büro geblieben.","Wczoraj długo została w biurze."]],"Czasowniki",""],["word","der Unterschied","różnica","Pl.: die Unterschiede",[["","Was ist der Unterschied zwischen „seit” und „vor”?","Jaka jest różnica między „seit” a „vor”?"]],"Słownictwo ogólne",""],["phrase","Ich melde mich bei Ihnen","Odezwę się do Pana lub Pani","",[["","Ich melde mich bis Freitag bei Ihnen.","Odezwę się do Pana lub Pani do piątku."]],"Praca i biuro",""],["sentence","Nachdem ich gegessen hatte, bin ich spazieren gegangen.","Po tym jak zjadłem, poszedłem na spacer.","nachdem + Plusquamperfekt (hatte/war + Partizip II); w zdaniu głównym Perfekt lub Präteritum.",[],"Zdania w czasach","Plusquamperfekt"],["word","die Gelegenheit","okazja","Pl.: die Gelegenheiten",[["","Das ist eine gute Gelegenheit, ihn kennenzulernen.","To dobra okazja, żeby go poznać."]],"Słownictwo ogólne",""],["phrase","auf dem Laufenden halten","informować na bieżąco","",[["","Halten Sie mich bitte auf dem Laufenden.","Proszę informować mnie na bieżąco."]],"Praca i biuro",""],["verb","fahren","jechać","fährt · fuhr · ist gefahren",[["Präsens","Fährst du mit dem Zug oder mit dem Auto?","Jedziesz pociągiem czy samochodem?"],["Präteritum","Früher fuhr er jeden Tag mit dem Rad.","Dawniej jeździł codziennie rowerem."],["Perfekt","Wir sind letzten Sommer nach Italien gefahren.","W zeszłe lato pojechaliśmy do Włoch."]],"Czasowniki",""],["word","der Eindruck","wrażenie","Pl.: die Eindrücke",[["","Er hat auf mich einen sehr netten Eindruck gemacht.","Zrobił na mnie bardzo miłe wrażenie."]],"Słownictwo ogólne",""],["phrase","die Frist einhalten","dotrzymać terminu","",[["","Wir müssen die Frist unbedingt einhalten.","Musimy bezwzględnie dotrzymać terminu."]],"Praca i biuro",""],["sentence","Ich hatte den Bus verpasst, deshalb kam ich zu spät.","Spóźniłem się, bo uciekł mi autobus.","Plusquamperfekt = przeszłość przed inną przeszłością.",[],"Zdania w czasach","Plusquamperfekt"],["word","die Entscheidung","decyzja","Pl.: die Entscheidungen",[["","Die Entscheidung ist mir nicht leichtgefallen.","Ta decyzja nie przyszła mi łatwo."]],"Słownictwo ogólne",""],["phrase","Das lässt sich einrichten","Da się to zorganizować","",[["","Ein Termin am Freitag? Das lässt sich einrichten.","Termin w piątek? Da się to zorganizować."]],"Praca i biuro",""],["verb","sprechen","mówić, rozmawiać","spricht · sprach · hat gesprochen",[["Präsens","Sprichst du Deutsch mit deinen Kollegen?","Czy mówisz po niemiecku ze swoimi kolegami z pracy?"],["Präteritum","Sie sprach leise, damit niemand sie hörte.","Mówiła cicho, żeby nikt jej nie usłyszał."],["Perfekt","Ich habe heute schon mit dem Chef gesprochen.","Rozmawiałem już dziś z szefem."]],"Czasowniki",""],["word","der Zufall","przypadek","Pl.: die Zufälle",[["","So ein Zufall! Ich wollte dich gerade anrufen.","Co za przypadek! Właśnie chciałem do ciebie zadzwonić."]],"Słownictwo ogólne",""],["phrase","zuständig sein für","odpowiadać za, być właściwym w sprawie","",[["","Wer ist dafür zuständig?","Kto się tym zajmuje?"]],"Praca i biuro",""],["sentence","Nächstes Jahr werde ich einen Deutschkurs besuchen.","W przyszłym roku pójdę na kurs niemieckiego.","werden + bezokolicznik na końcu. W mowie często zastępuje go Präsens z okolicznikiem czasu.",[],"Zdania w czasach","Futur I"],["word","die Ausrede","wymówka","Pl.: die Ausreden",[["","Das ist doch nur eine Ausrede.","To przecież tylko wymówka."]],"Słownictwo ogólne",""],["phrase","Rücksprache halten","skonsultować się","",[["","Ich muss kurz Rücksprache mit meiner Chefin halten.","Muszę się krótko skonsultować z szefową."]],"Praca i biuro",""],["verb","wissen","wiedzieć","weiß · wusste · hat gewusst",[["Präsens","Ich weiß nicht, wo er wohnt.","Nie wiem, gdzie mieszka."],["Präteritum","Damals wusste ich noch nichts davon.","Wtedy jeszcze nic o tym nie wiedziałem."],["Perfekt","Hast du das schon gewusst?","Czy już to wiedziałeś?"]],"Czasowniki",""],["word","der Streit","kłótnia","Pl.: rzadko (die Streitigkeiten)",[["","Wegen Kleinigkeiten gibt es ständig Streit.","O drobiazgi ciągle są kłótnie."]],"Słownictwo ogólne",""],["phrase","Überstunden machen","pracować w nadgodzinach","",[["","Diese Woche habe ich viele Überstunden gemacht.","W tym tygodniu zrobiłem dużo nadgodzin."]],"Praca i biuro",""],["sentence","Er wird wohl noch im Büro sein.","Pewnie jeszcze jest w biurze.","Futur I z wohl wyraża przypuszczenie o teraźniejszości, nie przyszłość.",[],"Zdania w czasach","Futur I (przypuszczenie)"],["word","die Ahnung","pojęcie, przeczucie","Pl.: brak",[["","Ich habe keine Ahnung, wo mein Handy ist.","Nie mam pojęcia, gdzie jest mój telefon."]],"Słownictwo ogólne",""],["phrase","einen Antrag stellen","złożyć wniosek","",[["","Ich möchte einen Antrag auf Verlängerung stellen.","Chcę złożyć wniosek o przedłużenie."]],"Urzędy i mieszkanie",""],["verb","denken","myśleć","denkt · dachte · hat gedacht",[["Präsens","Ich denke oft an meine Familie.","Często myślę o rodzinie."],["Präteritum","Ich dachte, du kommst später.","Myślałem, że przyjdziesz później."],["Perfekt","Daran habe ich gar nicht gedacht.","W ogóle o tym nie pomyślałem."]],"Czasowniki",""],["word","der Alltag","codzienność","Pl.: brak",[["","Im Alltag spreche ich fast nur Deutsch.","Na co dzień mówię prawie wyłącznie po niemiecku."]],"Słownictwo ogólne",""],["phrase","Das hat mich echt getroffen","To naprawdę mnie dotknęło","",[["","Seine Bemerkung hat mich echt getroffen.","Jego uwaga naprawdę mnie dotknęła."]],"Emocje i relacje",""],["sentence","Bis morgen Abend werde ich den Bericht geschrieben haben.","Do jutrzejszego wieczora będę miał napisany raport.","werden + Partizip II + haben/sein: czynność zakończona w określonym momencie w przyszłości.",[],"Zdania w czasach","Futur II"],["word","die Gewohnheit","nawyk","Pl.: die Gewohnheiten",[["","Kaffee am Morgen ist für mich eine Gewohnheit.","Poranna kawa to dla mnie nawyk."]],"Słownictwo ogólne",""],["phrase","sich freuen auf","cieszyć się na (coś w przyszłości)","",[["","Ich freue mich schon auf den Urlaub.","Już cieszę się na urlop."]],"Emocje i relacje",""],["verb","anrufen","dzwonić (czasownik rozdzielny)","ruft an · rief an · hat angerufen",[["Präsens","Ich rufe dich heute Abend an.","Zadzwonię do ciebie dziś wieczorem."],["Präteritum","Sie rief mich an, als ich im Zug saß.","Zadzwoniła do mnie, gdy siedziałem w pociągu."],["Perfekt","Hat jemand für mich angerufen?","Czy ktoś do mnie dzwonił?"]],"Czasowniki",""],["word","der Zeitpunkt","moment, termin","Pl.: die Zeitpunkte",[["","Zu diesem Zeitpunkt wusste ich noch nichts davon.","W tamtym momencie jeszcze nic o tym nie wiedziałem."]],"Słownictwo ogólne",""],["phrase","Ich bin gespannt, ob …","Ciekawe, czy …","",[["","Ich bin gespannt, ob sie zusagt.","Ciekawe, czy się zgodzi."]],"Emocje i relacje",""],["sentence","Ich hätte gern mehr Zeit.","Chciałbym mieć więcej czasu.","hätte/wäre + gern wyraża życzenie lub uprzejmą prośbę.",[],"Zdania w czasach","Konjunktiv II (życzenie)"],["word","die Reihenfolge","kolejność","Pl.: die Reihenfolgen",[["","Bitte beachten Sie die Reihenfolge der Schritte.","Proszę przestrzegać kolejności kroków."]],"Słownictwo ogólne",""],["phrase","Du fehlst mir","Tęsknię za tobą","",[["","Seit du weg bist, fehlst du mir jeden Tag.","Odkąd wyjechałeś, tęsknię za tobą każdego dnia."]],"Emocje i relacje",""],["verb","aufstehen","wstawać (rozdzielny)","steht auf · stand auf · ist aufgestanden",[["Präsens","Ich stehe normalerweise um sechs auf.","Zwykle wstaję o szóstej."],["Präteritum","Am Sonntag stand ich erst um zehn auf.","W niedzielę wstałem dopiero o dziesiątej."],["Perfekt","Bist du schon aufgestanden?","Już wstałeś?"]],"Czasowniki",""],["word","der Vorteil","zaleta","Pl.: die Vorteile",[["","Der Vorteil ist, dass man flexibel arbeiten kann.","Zaletą jest to, że można pracować elastycznie."]],"Słownictwo ogólne",""],["phrase","total erledigt sein","być kompletnie wykończonym","",[["","Nach der Schicht bin ich total erledigt.","Po zmianie jestem kompletnie wykończony."]],"Emocje i relacje",""],["sentence","Wenn ich mehr Geld hätte, würde ich ein Auto kaufen.","Gdybym miał więcej pieniędzy, kupiłbym samochód.","wenn + Konjunktiv II, würde + bezokolicznik. Nierzeczywisty warunek w teraźniejszości.",[],"Zdania w czasach","Konjunktiv II (warunek)"],["word","der Nachteil","wada","Pl.: die Nachteile",[["","Ein Nachteil ist der lange Arbeitsweg.","Wadą jest długa droga do pracy."]],"Słownictwo ogólne",""],["phrase","Mach dir keinen Kopf","Nie zawracaj sobie tym głowy","",[["","Mach dir keinen Kopf, das kriegen wir hin.","Nie przejmuj się, damy radę."]],"Emocje i relacje",""],["verb","anfangen","zaczynać (rozdzielny)","fängt an · fing an · hat angefangen",[["Präsens","Der Kurs fängt nächsten Montag an.","Kurs zaczyna się w przyszły poniedziałek."],["Präteritum","Es fing an zu regnen, als wir losgingen.","Zaczęło padać, gdy wyszliśmy."],["Perfekt","Hast du schon mit dem Bericht angefangen?","Zacząłeś już pisać raport?"]],"Czasowniki",""],["word","die Absicht","zamiar","Pl.: die Absichten",[["","Ich habe nicht die Absicht, umzuziehen.","Nie mam zamiaru się przeprowadzać."]],"Słownictwo ogólne",""],["phrase","Das kann ich gut nachvollziehen","Dobrze to rozumiem","",[["","Dass du sauer bist, kann ich gut nachvollziehen.","Dobrze rozumiem, że jesteś zły."]],"Emocje i relacje",""],["sentence","Wenn ich das gewusst hätte, wäre ich nicht gekommen.","Gdybym to wiedział, nie przyszedłbym.","hätte/wäre + Partizip II: nierzeczywisty warunek w przeszłości.",[],"Zdania w czasach","Konjunktiv II (przeszłość)"],["word","das Ergebnis","wynik","Pl.: die Ergebnisse",[["","Wann bekommen wir das Ergebnis?","Kiedy dostaniemy wynik?"]],"Słownictwo ogólne",""],["phrase","Hast du Lust, … zu …?","Masz ochotę …?","",[["","Hast du Lust, am Wochenende wandern zu gehen?","Masz ochotę pójść w weekend na wędrówkę?"]],"Plany i umawianie się",""],["verb","einladen","zapraszać (rozdzielny)","lädt ein · lud ein · hat eingeladen",[["Präsens","Ich lade dich zum Essen ein.","Zapraszam cię na obiad."],["Präteritum","Sie lud uns zu ihrer Hochzeit ein.","Zaprosiła nas na swój ślub."],["Perfekt","Wir haben die Nachbarn eingeladen.","Zaprosiliśmy sąsiadów."]],"Czasowniki",""],["word","die Lösung","rozwiązanie","Pl.: die Lösungen",[["","Wir suchen noch nach einer Lösung.","Wciąż szukamy rozwiązania."]],"Słownictwo ogólne",""],["phrase","Ich bin dabei","Jestem za, wchodzę w to","",[["","Grillen am Samstag? Ich bin dabei!","Grill w sobotę? Wchodzę w to!"]],"Plany i umawianie się",""],["sentence","Könnten Sie mir bitte den Weg zeigen?","Czy mógłby Pan lub Pani pokazać mi drogę?","könnten/würden + bezokolicznik łagodzi prośbę. Brzmi uprzejmiej niż „Können Sie…?”.",[],"Zdania w czasach","Konjunktiv II (grzeczna prośba)"],["word","das Verständnis","zrozumienie","Pl.: brak",[["","Danke für dein Verständnis!","Dziękuję za zrozumienie!"]],"Słownictwo ogólne",""],["phrase","Das passt mir gut","To mi pasuje","",[["","Donnerstag um sechs passt mir gut.","Czwartek o szóstej mi pasuje."]],"Plany i umawianie się",""],["verb","verstehen","rozumieć","versteht · verstand · hat verstanden",[["Präsens","Ich verstehe die Frage nicht ganz.","Nie do końca rozumiem to pytanie."],["Präteritum","Damals verstand ich kein Wort Deutsch.","Wtedy nie rozumiałem ani słowa po niemiecku."],["Perfekt","Hast du alles verstanden?","Czy wszystko zrozumiałeś?"]],"Czasowniki",""],["word","die Besprechung","narada","Pl.: die Besprechungen",[["","Die Besprechung wurde auf morgen verschoben.","Narada została przełożona na jutro."]],"Praca i biuro",""],["phrase","Lass uns später telefonieren","Pogadajmy później przez telefon","",[["","Ich sitze gerade im Zug. Lass uns später telefonieren.","Siedzę w pociągu. Pogadajmy później przez telefon."]],"Plany i umawianie się",""],["sentence","Sie sagte, sie habe keine Zeit.","Powiedziała, że nie ma czasu.","Konjunktiv I służy do mowy zależnej (habe, sei, könne). W języku potocznym często zastępuje go Indikativ.",[],"Zdania w czasach","Konjunktiv I (mowa zależna)"],["word","die Bewerbung","podanie o pracę, aplikacja","Pl.: die Bewerbungen",[["","Ich habe mehrere Bewerbungen geschrieben.","Napisałem kilka podań o pracę."]],"Praca i biuro",""],["phrase","Sag mir Bescheid","Daj mi znać","",[["","Sag mir Bescheid, wenn du angekommen bist.","Daj mi znać, jak dojedziesz."]],"Plany i umawianie się",""],["verb","vergessen","zapominać","vergisst · vergaß · hat vergessen",[["Präsens","Ich vergesse ständig seinen Namen.","Ciągle zapominam jego imię."],["Präteritum","Er vergaß seinen Regenschirm im Bus.","Zapomniał parasola w autobusie."],["Perfekt","Ich habe vergessen, Milch zu kaufen.","Zapomniałem kupić mleko."]],"Czasowniki",""],["word","der Lebenslauf","CV","Pl.: die Lebensläufe",[["","Bitte schicken Sie uns Ihren Lebenslauf.","Proszę przesłać nam swoje CV."]],"Praca i biuro",""],["phrase","warten auf + Akk.","czekać na","",[["","Ich warte seit zwanzig Minuten auf den Bus.","Czekam na autobus od dwudziestu minut."]],"Czasowniki z przyimkami",""],["sentence","Die Tickets werden online verkauft.","Bilety są sprzedawane online.","Passiv: werden + Partizip II. Podmiot nie wykonuje czynności.",[],"Zdania w czasach","Passiv Präsens"],["word","das Vorstellungsgespräch","rozmowa kwalifikacyjna","Pl.: die Vorstellungsgespräche",[["","Morgen habe ich ein Vorstellungsgespräch.","Jutro mam rozmowę kwalifikacyjną."]],"Praca i biuro",""],["phrase","sich kümmern um + Akk.","zajmować się","",[["","Wer kümmert sich um die Getränke?","Kto zajmuje się napojami?"]],"Czasowniki z przyimkami",""],["verb","bekommen","dostawać (nie „stawać się”)","bekommt · bekam · hat bekommen",[["Präsens","Ich bekomme morgen Besuch.","Jutro będę miał gości."],["Präteritum","Sie bekam einen neuen Job in Hamburg.","Dostała nową pracę w Hamburgu."],["Perfekt","Hast du meine Nachricht bekommen?","Dostałeś moją wiadomość?"]],"Czasowniki",""],["word","die Kündigung","wypowiedzenie","Pl.: die Kündigungen",[["","Er hat gestern seine Kündigung eingereicht.","Wczoraj złożył wypowiedzenie."]],"Praca i biuro",""],["phrase","sich entscheiden für + Akk.","zdecydować się na","",[["","Wir haben uns für die kleinere Wohnung entschieden.","Zdecydowaliśmy się na mniejsze mieszkanie."]],"Czasowniki z przyimkami",""],["sentence","Das Haus wurde 1990 gebaut.","Dom został zbudowany w 1990 roku.","wurde + Partizip II: bierna w czasie przeszłym, typowa dla tekstów pisanych.",[],"Zdania w czasach","Passiv Präteritum"],["word","der Termin","termin, umówiona wizyta","Pl.: die Termine",[["","Ich habe nächste Woche einen Termin beim Zahnarzt.","W przyszłym tygodniu mam wizytę u dentysty."]],"Praca i biuro",""],["phrase","sich erinnern an + Akk.","pamiętać, przypominać sobie","",[["","Ich erinnere mich nicht an seinen Namen.","Nie pamiętam jego imienia."]],"Czasowniki z przyimkami",""],["verb","treffen","spotykać","trifft · traf · hat getroffen",[["Präsens","Ich treffe morgen eine alte Freundin.","Jutro spotykam starą przyjaciółkę."],["Präteritum","Wir trafen uns zufällig im Supermarkt.","Spotkaliśmy się przypadkiem w supermarkecie."],["Perfekt","Hast du ihn schon getroffen?","Czy już się z nim spotkałeś?"]],"Czasowniki",""],["word","der Umzug","przeprowadzka","Pl.: die Umzüge",[["","Beim Umzug brauche ich deine Hilfe.","Przy przeprowadzce potrzebuję twojej pomocy."]],"Urzędy i mieszkanie",""],["phrase","abhängen von + Dat.","zależeć od","",[["","Das hängt vom Wetter ab.","To zależy od pogody."]],"Czasowniki z przyimkami",""],["sentence","Der Termin ist leider abgesagt worden.","Termin został niestety odwołany.","Perfekt bierny: sein + Partizip II + worden (nie „geworden”).",[],"Zdania w czasach","Passiv Perfekt"],["word","die Miete","czynsz","Pl.: die Mieten",[["","Die Miete ist in Berlin stark gestiegen.","Czynsz w Berlinie mocno wzrósł."]],"Urzędy i mieszkanie",""],["phrase","sich beschweren über + Akk.","skarżyć się na","",[["","Die Nachbarn beschweren sich über den Lärm.","Sąsiedzi skarżą się na hałas."]],"Czasowniki z przyimkami",""],["verb","mitbringen","przynosić ze sobą (rozdzielny)","bringt mit · brachte mit · hat mitgebracht",[["Präsens","Soll ich etwas zum Essen mitbringen?","Mam przynieść coś do jedzenia?"],["Präteritum","Er brachte immer Blumen mit.","Zawsze przynosił kwiaty."],["Perfekt","Ich habe dir einen Kaffee mitgebracht.","Przyniosłem ci kawę."]],"Czasowniki",""],["word","die Rechnung","rachunek, faktura","Pl.: die Rechnungen",[["","Die Rechnung muss bis Freitag bezahlt werden.","Rachunek trzeba zapłacić do piątku."]],"Urzędy i mieszkanie",""],["phrase","teilnehmen an + Dat.","brać udział w","",[["","Ich nehme am Sprachkurs teil.","Biorę udział w kursie językowym."]],"Czasowniki z przyimkami",""],["sentence","Die Tür ist schon geschlossen.","Drzwi są już zamknięte.","sein + Partizip II opisuje stan będący wynikiem czynności, a nie samą czynność.",[],"Zdania w czasach","Zustandspassiv"],["word","die Steckdose","gniazdko","Pl.: die Steckdosen",[["","Gibt es hier irgendwo eine Steckdose?","Czy jest tu gdzieś gniazdko?"]],"Urzędy i mieszkanie",""],["verb","sich entschuldigen","przepraszać (zwrotny)","entschuldigt sich · entschuldigte sich · hat sich entschuldigt",[["Präsens","Ich entschuldige mich für die Verspätung.","Przepraszam za spóźnienie."],["Präteritum","Er entschuldigte sich sofort bei ihr.","Od razu ją przeprosił."],["Perfekt","Hast du dich schon bei ihm entschuldigt?","Czy już go przeprosiłeś?"]],"Czasowniki",""],["word","die Erkältung","przeziębienie","Pl.: die Erkältungen",[["","Ich habe mir eine Erkältung geholt.","Złapałem przeziębienie."]],"Zdrowie",""],["sentence","Ich musste gestern bis spät arbeiten.","Wczoraj musiałem pracować do późna.","Czasowniki modalne zwykle w Präteritum: musste, konnte, wollte, durfte.",[],"Zdania w czasach","Präteritum modalny"],["word","das Rezept","recepta; przepis","Pl.: die Rezepte",[["","Der Arzt hat mir ein Rezept ausgestellt.","Lekarz wystawił mi receptę."]],"Zdrowie",""],["verb","schlafen","spać","schläft · schlief · hat geschlafen",[["Präsens","Das Baby schläft endlich.","Dziecko wreszcie śpi."],["Präteritum","Letzte Nacht schlief ich schlecht.","Zeszłej nocy źle spałem."],["Perfekt","Hast du gut geschlafen?","Dobrze spałeś?"]],"Czasowniki",""],["word","das Gepäck","bagaż","Pl.: brak",[["","Mein Gepäck ist nicht angekommen.","Mój bagaż nie dotarł."]],"Podróż",""],["sentence","Ich habe leider nicht kommen können.","Niestety nie mogłem przyjść.","Perfekt z modalnym: haben + dwa bezokoliczniki (nie Partizip II).",[],"Zdania w czasach","Perfekt modalny"],["word","das Ladekabel","kabel do ładowania","Pl.: die Ladekabel",[["","Hast du zufällig ein Ladekabel dabei?","Masz przypadkiem przy sobie kabel do ładowania?"]],"Podróż",""],["verb","helfen","pomagać (+ Dativ)","hilft · half · hat geholfen",[["Präsens","Kannst du mir beim Umzug helfen?","Pomożesz mi przy przeprowadzce?"],["Präteritum","Sie half ihm bei den Hausaufgaben.","Pomogła mu w zadaniu domowym."],["Perfekt","Er hat mir sehr geholfen.","Bardzo mi pomógł."]],"Czasowniki",""],["word","selbstverständlich","oczywiście, naturalnie","przysłówek",[["","Selbstverständlich helfe ich dir beim Umzug.","Oczywiście pomogę ci przy przeprowadzce."]],"Przymiotniki i przysłówki",""],["sentence","Ich bleibe zu Hause, weil ich krank bin.","Zostaję w domu, bo jestem chory.","weil, dass, obwohl, wenn: odmieniony czasownik idzie na koniec zdania podrzędnego.",[],"Zdania w czasach","Zdanie podrzędne (weil)"],["word","zufrieden","zadowolony","przymiotnik",[["","Bist du mit dem Ergebnis zufrieden?","Czy jesteś zadowolony z wyniku?"]],"Przymiotniki i przysłówki",""],["verb","laufen","biegać, iść pieszo","läuft · lief · ist gelaufen",[["Präsens","Ich laufe jeden Morgen im Park.","Biegam co rano w parku."],["Präteritum","Er lief so schnell er konnte.","Biegł tak szybko, jak mógł."],["Perfekt","Wir sind zum Bahnhof gelaufen.","Poszliśmy na dworzec pieszo."]],"Czasowniki",""],["word","anstrengend","męczący","przymiotnik",[["","Die Reise war lang und anstrengend.","Podróż była długa i męcząca."]],"Przymiotniki i przysłówki",""],["sentence","Obwohl es regnete, sind wir gewandert.","Chociaż padało, poszliśmy na wędrówkę.","Po zdaniu podrzędnym na początku czasownik zdania głównego stoi zaraz za przecinkiem: …, sind wir…",[],"Zdania w czasach","Zdanie podrzędne (obwohl)"],["word","peinlich","żenujący, krępujący","przymiotnik",[["","Das ist mir total peinlich.","Strasznie mi głupio."]],"Przymiotniki i przysłówki",""],["verb","lesen","czytać","liest · las · hat gelesen",[["Präsens","Abends lese ich gern ein Buch.","Wieczorami chętnie czytam książkę."],["Präteritum","Sie las die Nachricht dreimal.","Przeczytała wiadomość trzy razy."],["Perfekt","Hast du den Artikel gelesen?","Przeczytałeś ten artykuł?"]],"Czasowniki",""],["word","zuverlässig","rzetelny, niezawodny","przymiotnik",[["","Er ist ein sehr zuverlässiger Kollege.","To bardzo rzetelny kolega z pracy."]],"Przymiotniki i przysłówki",""],["sentence","Das ist der Mann, den ich gestern getroffen habe.","To ten mężczyzna, którego wczoraj spotkałem.","Rodzaj zaimka względnego z rzeczownika (der Mann), przypadek z roli w zdaniu (den = Akkusativ).",[],"Zdania w czasach","Zdanie względne"],["word","ungefähr","mniej więcej","przysłówek",[["","Es dauert ungefähr zwanzig Minuten.","To trwa mniej więcej dwadzieścia minut."]],"Przymiotniki i przysłówki",""],["verb","schreiben","pisać","schreibt · schrieb · hat geschrieben",[["Präsens","Ich schreibe dir später eine E-Mail.","Napiszę do ciebie później maila."],["Präteritum","Er schrieb ihr jeden Tag einen Brief.","Pisał do niej list codziennie."],["Perfekt","Ich habe ihm gestern eine Nachricht geschrieben.","Wczoraj napisałem do niego wiadomość."]],"Czasowniki",""],["word","mittlerweile","z czasem, już (po pewnym czasie)","przysłówek",[["","Mittlerweile verstehe ich fast alles.","Z czasem rozumiem już prawie wszystko."]],"Przymiotniki i przysłówki",""],["sentence","Ich weiß nicht, wann der Zug ankommt.","Nie wiem, kiedy przyjeżdża pociąg.","W zdaniu podrzędnym przedrostek wraca do czasownika: ankommt (w głównym: kommt … an).",[],"Zdania w czasach","Rozdzielny przedrostek w zdaniu podrzędnym"],["word","trotzdem","mimo to","przysłówek (po nim szyk: czasownik na 2. miejscu)",[["","Es regnet, trotzdem gehen wir spazieren.","Pada, mimo to idziemy na spacer."]],"Przymiotniki i przysłówki",""],["verb","kennen","znać (osoby, miejsca)","kennt · kannte · hat gekannt",[["Präsens","Kennst du ein gutes Restaurant in der Nähe?","Znasz jakąś dobrą restaurację w pobliżu?"],["Präteritum","Wir kannten uns schon aus der Schule.","Znaliśmy się już ze szkoły."],["Perfekt","Ich habe ihn nie richtig gekannt.","Nigdy nie znałem go naprawdę."]],"Czasowniki",""],["word","deshalb","dlatego","przysłówek",[["","Ich war krank, deshalb bin ich zu Hause geblieben.","Byłem chory, dlatego zostałem w domu."]],"Przymiotniki i przysłówki",""],["sentence","Es ist wichtig, regelmäßig zu üben.","Ważne jest regularne ćwiczenie.","zu + bezokolicznik po przecinku. Przy rozdzielnych zu wchodzi w środek: anzurufen.",[],"Zdania w czasach","zu + bezokolicznik"],["word","eigentlich","właściwie","przysłówek",[["","Eigentlich wollte ich früher gehen, aber dann kam noch ein Anruf.","Właściwie chciałem wyjść wcześniej, ale potem był jeszcze telefon."]],"Przymiotniki i przysłówki",""],["verb","ankommen","przyjeżdżać, docierać (rozdzielny)","kommt an · kam an · ist angekommen",[["Präsens","Der Zug kommt um 14:30 Uhr an.","Pociąg przyjeżdża o 14:30."],["Präteritum","Wir kamen erst spät am Abend an.","Dotarliśmy dopiero późnym wieczorem."],["Perfekt","Bist du gut angekommen?","Dojechałeś dobrze?"]],"Czasowniki",""],["word","außerdem","poza tym","przysłówek",[["","Das Hotel ist günstig, außerdem liegt es zentral.","Hotel jest tani, a poza tym leży w centrum."]],"Przymiotniki i przysłówki",""],["sentence","Sei bitte pünktlich und ruf mich an, wenn du da bist!","Bądź proszę punktualnie i zadzwoń do mnie, jak już będziesz.","Imperativ: sei (sein), ruf … an (rozdzielny: przedrostek na końcu).",[],"Zdania w czasach","Tryb rozkazujący"],["word","allerdings","jednak, co prawda","przysłówek",[["","Die Wohnung ist schön, allerdings ziemlich teuer.","Mieszkanie jest ładne, ale dość drogie."]],"Przymiotniki i przysłówki",""],["verb","beantragen","ubiegać się o, składać wniosek o","beantragt · beantragte · hat beantragt",[["","Wo kann ich das Visum beantragen?","Gdzie mogę złożyć wniosek o wizę?"]],"Urzędy i mieszkanie",""],["word","wenigstens","przynajmniej","przysłówek",[["","Ruf wenigstens kurz an, wenn du später kommst.","Zadzwoń przynajmniej na chwilę, jeśli przyjdziesz później."]],"Przymiotniki i przysłówki",""],["word","bestimmt","na pewno","przysłówek",[["","Das schaffst du bestimmt.","Na pewno ci się uda."]],"Przymiotniki i przysłówki",""],["verb","absagen","odwołać (spotkanie), odmówić","sagt ab · sagte ab · hat abgesagt",[["","Ich muss leider absagen, mir ist etwas dazwischengekommen.","Niestety muszę odwołać, coś mi wypadło."]],"Plany i umawianie się",""],["verb","sich verabreden","umówić się","verabredet sich · verabredete sich · hat sich verabredet",[["","Wir haben uns für acht Uhr verabredet.","Umówiliśmy się na ósmą."]],"Plany i umawianie się",""],["verb","bringen","przynosić, zanosić","bringt · brachte · hat gebracht",[["Präsens","Ich bringe dir gleich ein Glas Wasser.","Zaraz przyniosę ci szklankę wody."],["Präteritum","Er brachte das Paket zur Post.","Zaniósł paczkę na pocztę."],["Perfekt","Hast du den Müll rausgebracht?","Wyniosłeś śmieci?"]],"Czasowniki",""],["word","der Rücken","plecy","Pl.: die Rücken",[["","Mein Rücken tut seit Tagen weh.","Od kilku dni bolą mnie plecy."]],"Zdrowie",""],["phrase","Das ist mir Wurst","Jest mi wszystko jedno (potocznie)","",[["","Pizza oder Pasta? Das ist mir Wurst.","Pizza czy makaron? Wszystko mi jedno."]],"Potoczne zwroty",""],["sentence","Ich kann heute leider nicht mitkommen.","Dziś niestety nie mogę pójść z wami.","Czasownik modalny na 2. miejscu, bezokolicznik na końcu: mitkommen.",[],"Zdania w czasach","Präsens modalny"],["word","das Fieber","gorączka","Pl.: brak",[["","Er hat hohes Fieber.","Ma wysoką gorączkę."]],"Zdrowie",""],["verb","sein (odmiana)","być","Präsens: ich bin · du bist · er/sie/es ist · wir sind · ihr seid · sie/Sie sind\nPräteritum: ich war · du warst · er war · wir waren · ihr wart · sie waren\nPerfekt: ich bin gewesen\nKonjunktiv II: ich wäre",[["Präsens","Wir sind seit zwei Stunden unterwegs.","Jesteśmy w drodze od dwóch godzin."],["Präteritum","Gestern war ich den ganzen Tag krank.","Wczoraj cały dzień byłem chory."],["Konjunktiv II","Ich wäre gern schon da.","Chciałbym już tam być."]],"Odmiany",""],["phrase","Da ist was dran","Coś w tym jest","",[["","Da ist was dran, was du sagst.","Coś w tym jest, co mówisz."]],"Potoczne zwroty",""],["phrase","Zmiana samogłoski e → i / ie","czasowniki mocne: du i er/sie/es","sprechen: du sprichst · er spricht\ngeben: du gibst · er gibt\nnehmen: du nimmst · er nimmt\nhelfen: du hilfst · er hilft\nlesen: du liest · er liest\nsehen: du siehst · er sieht",[["","Er gibt mir immer gute Tipps.","Zawsze daje mi dobre rady."],["","Liest du gern Krimis?","Czy chętnie czytasz kryminały?"],["","Du nimmst zu viel Zucker.","Bierzesz za dużo cukru."]],"Odmiany i gramatyka",""],["word","die Schmerzen","ból","tylko liczba mnoga",[["","Haben Sie starke Schmerzen?","Czy ma Pan lub Pani silny ból?"]],"Zdrowie",""],["verb","sitzen","siedzieć","sitzt · saß · hat gesessen",[["Präsens","Wir sitzen schon seit einer Stunde im Stau.","Stoimy w korku już od godziny."],["Präteritum","Er saß den ganzen Tag am Schreibtisch.","Siedział cały dzień przy biurku."],["Perfekt","Ich habe lange im Wartezimmer gesessen.","Długo siedziałem w poczekalni."]],"Czasowniki",""],["word","der Husten","kaszel","Pl.: brak",[["","Ich habe seit einer Woche Husten.","Kaszlę od tygodnia."]],"Zdrowie",""],["phrase","pleite sein","być spłukanym","",[["","Am Monatsende bin ich meistens pleite.","Pod koniec miesiąca zwykle jestem spłukany."]],"Potoczne zwroty",""],["sentence","Wir hatten gestern kein Internet.","Wczoraj nie mieliśmy internetu.","hatte, war i czasowniki modalne zwykle w Präteritum, także w mowie.",[],"Zdania w czasach","Präteritum (haben)"],["word","die Tablette","tabletka","Pl.: die Tabletten",[["","Nehmen Sie dreimal täglich eine Tablette.","Proszę brać tabletkę trzy razy dziennie."]],"Zdrowie",""],["verb","haben (odmiana)","mieć","Präsens: ich habe · du hast · er hat · wir haben · ihr habt · sie haben\nPräteritum: ich hatte · du hattest · er hatte · wir hatten · ihr hattet · sie hatten\nPerfekt: ich habe gehabt\nKonjunktiv II: ich hätte",[["Präsens","Hast du morgen Zeit?","Czy masz jutro czas?"],["Präteritum","Wir hatten gestern kein Internet.","Wczoraj nie mieliśmy internetu."],["Konjunktiv II","Ich hätte gern einen Kaffee.","Poproszę kawę."]],"Odmiany",""],["phrase","Bock haben auf …","mieć ochotę na … (potocznie)","",[["","Hast du Bock auf Pizza?","Masz ochotę na pizzę?"]],"Potoczne zwroty",""],["phrase","Umlaut a → ä","czasowniki mocne: du i er/sie/es","fahren: du fährst · er fährt\nschlafen: du schläfst · er schläft\nlaufen: du läufst · er läuft\ntragen: du trägst · er trägt\nwaschen: du wäschst · er wäscht\nanfangen: du fängst an · er fängt an",[["","Läufst du auch beim Marathon mit?","Biegniesz też w maratonie?"],["","Er fährt jeden Tag mit dem Rad zur Arbeit.","Codziennie jeździ do pracy rowerem."],["","Das Baby schläft noch.","Dziecko jeszcze śpi."]],"Odmiany i gramatyka",""],["word","die Versicherung","ubezpieczenie","Pl.: die Versicherungen",[["","Die Versicherung übernimmt die Kosten.","Ubezpieczenie pokrywa koszty."]],"Zdrowie",""],["verb","stehen","stać","steht · stand · hat gestanden",[["Präsens","Das Auto steht vor der Tür.","Samochód stoi przed drzwiami."],["Präteritum","Sie stand lange an der Kasse.","Długo stała w kolejce do kasy."],["Perfekt","Ich habe zwei Stunden im Regen gestanden.","Stałem dwie godziny w deszczu."]],"Czasowniki",""],["word","die Krankmeldung","zwolnienie lekarskie, zgłoszenie choroby","Pl.: die Krankmeldungen",[["","Ich schicke dir meine Krankmeldung per Mail.","Wyślę ci zwolnienie mailem."]],"Zdrowie",""],["phrase","Passt schon","Spoko, w porządku","",[["","Danke für deine Hilfe! – Passt schon.","Dzięki za pomoc! – Spoko."]],"Potoczne zwroty",""],["sentence","Ich habe dich gestern dreimal angerufen.","Dzwoniłem do ciebie wczoraj trzy razy.","Rozdzielne: ge- wchodzi w środek (an-ge-rufen). Perfekt z haben.",[],"Zdania w czasach","Perfekt (rozdzielny)"],["word","die Heizung","ogrzewanie, kaloryfer","Pl.: die Heizungen",[["","Die Heizung ist seit gestern kaputt.","Ogrzewanie jest zepsute od wczoraj."]],"Urzędy i mieszkanie",""],["verb","werden (odmiana)","stawać się; czasownik pomocniczy futuru i strony biernej","Präsens: ich werde · du wirst · er wird · wir werden · ihr werdet · sie werden\nPräteritum: ich wurde · du wurdest · er wurde · wir wurden · ihr wurdet · sie wurden\nPerfekt: ich bin geworden (przy stronie biernej: worden)\nKonjunktiv II: ich würde",[["Präsens","Es wird langsam dunkel.","Powoli robi się ciemno."],["Präteritum","Er wurde Arzt.","Został lekarzem."],["Perfekt","Sie ist sehr müde geworden.","Zrobiła się bardzo zmęczona."]],"Odmiany",""],["phrase","Keine Ahnung","Nie mam pojęcia","",[["","Wo ist Lisa? – Keine Ahnung.","Gdzie jest Lisa? – Nie mam pojęcia."]],"Potoczne zwroty",""],["phrase","Partizip II: wzory","jak tworzyć imiesłów przeszły","regularne: ge-…-t (machen → gemacht)\nmocne: ge-…-en (sehen → gesehen)\nbez ge-: ver-, be-, ent-, er-, zer- (verstehen → verstanden)\nrozdzielne: ge- w środku (anrufen → angerufen)\nczasowniki na -ieren: bez ge- (studieren → studiert)",[["","Ich habe in Warschau studiert.","Studiowałem w Warszawie."],["","Er hat mich gestern angerufen.","Zadzwonił do mnie wczoraj."],["","Haben Sie das Formular ausgefüllt?","Czy wypełnił Pan lub Pani formularz?"]],"Odmiany i gramatyka",""],["word","der Vermieter","wynajmujący, właściciel mieszkania","Pl.: die Vermieter",[["","Ich muss den Vermieter anrufen.","Muszę zadzwonić do właściciela mieszkania."]],"Urzędy i mieszkanie",""],["verb","liegen","leżeć","liegt · lag · hat gelegen",[["Präsens","Das Handy liegt auf dem Tisch.","Telefon leży na stole."],["Präteritum","Die Stadt lag im Nebel.","Miasto tonęło we mgle."],["Perfekt","Ich habe den ganzen Sonntag im Bett gelegen.","Cały niedzielny dzień przeleżałem w łóżku."]],"Czasowniki",""],["word","die Waschmaschine","pralka","Pl.: die Waschmaschinen",[["","Die Waschmaschine macht komische Geräusche.","Pralka wydaje dziwne dźwięki."]],"Urzędy i mieszkanie",""],["phrase","Na ja","No cóż, no tak","",[["","Na ja, es hätte schlimmer kommen können.","No cóż, mogło być gorzej."]],"Potoczne zwroty",""],["sentence","Ich bin gestern früh eingeschlafen.","Wczoraj wcześnie zasnąłem.","Zmiana stanu (einschlafen, aufwachen, werden) tworzy Perfekt z sein.",[],"Zdania w czasach","Perfekt (sein)"],["word","der Müll","śmieci","Pl.: brak",[["","Wer bringt heute den Müll raus?","Kto dziś wyniesie śmieci?"]],"Urzędy i mieszkanie",""],["verb","können (odmiana)","móc, umieć","Präsens: ich kann · du kannst · er kann · wir können · ihr könnt · sie können\nPräteritum: ich konnte · du konntest · er konnte · wir konnten · ihr konntet · sie konnten\nPerfekt: ich habe gekonnt (z bezokolicznikiem: ich habe … können)\nKonjunktiv II: ich könnte",[["Präsens","Ich kann leider nicht kommen.","Niestety nie mogę przyjść."],["Präteritum","Früher konnte er gut Klavier spielen.","Dawniej dobrze grał na pianinie."],["Konjunktiv II","Könntest du mir kurz helfen?","Mógłbyś mi na chwilę pomóc?"]],"Odmiany",""],["phrase","Mir ist langweilig","Nudzę się","",[["","Mir ist am Sonntag immer so langweilig.","W niedzielę zawsze strasznie się nudzę."]],"Potoczne zwroty",""],["phrase","Tryb rozkazujący (Imperativ)","jak wydawać polecenia","du: geh! · komm! · fahr! · sei!\nihr: geht! · kommt! · fahrt! · seid!\nSie: gehen Sie! · kommen Sie! · seien Sie!\ne → i zostaje: sprich! · gib! · nimm! · lies!",[["","Komm doch mal vorbei!","Wpadnij kiedyś!"],["","Nehmen Sie bitte Platz.","Proszę usiąść."],["","Sei nicht sauer!","Nie bądź zły!"]],"Odmiany i gramatyka",""],["word","der Flur","korytarz, przedpokój","Pl.: die Flure",[["","Lass die Schuhe bitte im Flur stehen.","Zostaw proszę buty w przedpokoju."]],"Urzędy i mieszkanie",""],["verb","trinken","pić","trinkt · trank · hat getrunken",[["Präsens","Ich trinke morgens nur Tee.","Rano piję tylko herbatę."],["Präteritum","Er trank sein Glas in einem Zug aus.","Wypił szklankę jednym haustem."],["Perfekt","Wir haben zu viel Kaffee getrunken.","Wypiliśmy za dużo kawy."]],"Czasowniki",""],["word","der Aufzug","winda","Pl.: die Aufzüge",[["","Der Aufzug ist leider außer Betrieb.","Winda jest niestety nieczynna."]],"Urzędy i mieszkanie",""],["phrase","Das haut mich um","To mnie powala, jestem w szoku","",[["","Der Preis haut mich echt um.","Ta cena naprawdę mnie powala."]],"Potoczne zwroty",""],["sentence","Ich habe das Problem nicht verstanden.","Nie zrozumiałem tego problemu.","Przedrostki nierozdzielne (ver-, be-, ent-, er-) nie biorą ge-: verstanden.",[],"Zdania w czasach","Perfekt bez ge-"],["word","der Mietvertrag","umowa najmu","Pl.: die Mietverträge",[["","Bitte unterschreiben Sie den Mietvertrag.","Proszę podpisać umowę najmu."]],"Urzędy i mieszkanie",""],["verb","müssen (odmiana)","musieć","Präsens: ich muss · du musst · er muss · wir müssen · ihr müsst · sie müssen\nPräteritum: ich musste · du musstest · er musste · wir mussten · ihr musstet · sie mussten\nKonjunktiv II: ich müsste\nUwaga: nicht müssen = nie musieć (brak obowiązku), nicht dürfen = nie wolno",[["Präsens","Ich muss noch einkaufen.","Muszę jeszcze zrobić zakupy."],["Präteritum","Gestern musste ich lange warten.","Wczoraj musiałem długo czekać."],["nicht müssen","Du musst nicht kommen.","Nie musisz przychodzić."]],"Odmiany",""],["phrase","Schade","Szkoda","",[["","Du kannst nicht kommen? Schade!","Nie możesz przyjść? Szkoda!"]],"Potoczne zwroty",""],["phrase","Rodzajnik określony w czterech przypadkach","Nominativ · Akkusativ · Dativ · Genitiv","rodzaj męski: der · den · dem · des\nrodzaj żeński: die · die · der · der\nrodzaj nijaki: das · das · dem · des\nliczba mnoga: die · die · den · der",[["","Ich gebe dem Mann den Schlüssel.","Daję temu mężczyźnie klucz."],["","Hast du den Film gesehen?","Widziałeś ten film?"],["","Das ist das Auto meines Bruders.","To samochód mojego brata."]],"Odmiany i gramatyka",""],["word","der Einkauf","zakupy, zakup","Pl.: die Einkäufe",[["","Ich mache nach der Arbeit den Einkauf.","Po pracy robię zakupy."]],"Zakupy",""],["verb","essen","jeść","isst · aß · hat gegessen",[["Präsens","Was isst du zum Frühstück?","Co jesz na śniadanie?"],["Präteritum","Sie aß nur einen Salat.","Zjadła tylko sałatkę."],["Perfekt","Wir haben draußen gegessen.","Jedliśmy na zewnątrz."]],"Czasowniki",""],["word","der Rabatt","rabat, zniżka","Pl.: die Rabatte",[["","Gibt es einen Rabatt für Studenten?","Czy jest zniżka dla studentów?"]],"Zakupy",""],["phrase","Hauptsache, …","Najważniejsze, że …","",[["","Hauptsache, du bist gesund.","Najważniejsze, że jesteś zdrowy."]],"Potoczne zwroty",""],["sentence","Was hast du gestern gemacht? – Ich war im Kino und habe einen Film gesehen.","Co robiłeś wczoraj? – Byłem w kinie i obejrzałem film.","W mowie: sein i haben w Präteritum (war), reszta w Perfekt (habe gesehen).",[],"Zdania w czasach","Präteritum i Perfekt"],["word","die Zutat","składnik","Pl.: die Zutaten",[["","Welche Zutaten brauche ich für den Kuchen?","Jakich składników potrzebuję na ciasto?"]],"Zakupy",""],["verb","wollen (odmiana)","chcieć","Präsens: ich will · du willst · er will · wir wollen · ihr wollt · sie wollen\nPräteritum: ich wollte · du wolltest · er wollte · wir wollten · ihr wolltet · sie wollten\nPerfekt: ich habe gewollt (z bezokolicznikiem: ich habe … wollen)",[["Präsens","Was willst du heute essen?","Co chcesz dziś jeść?"],["Präteritum","Ich wollte dich nicht stören.","Nie chciałem ci przeszkadzać."],["Präsens","Wir wollen im Sommer nach Spanien fahren.","Chcemy pojechać latem do Hiszpanii."]],"Odmiany",""],["phrase","Mal sehen","Zobaczymy","",[["","Kommst du morgen? – Mal sehen.","Przyjdziesz jutro? – Zobaczymy."]],"Potoczne zwroty",""],["phrase","Zaimki osobowe","Akkusativ · Dativ","ich: mich · mir\ndu: dich · dir\ner: ihn · ihm\nsie: sie · ihr\nes: es · ihm\nwir: uns · uns\nihr: euch · euch\nsie / Sie: sie · ihnen / Sie · Ihnen",[["","Ich habe ihn gestern gesehen.","Widziałem go wczoraj."],["","Kannst du mir helfen?","Możesz mi pomóc?"],["","Ich schenke ihr Blumen.","Daję jej kwiaty w prezencie."]],"Odmiany i gramatyka",""],["word","die Bestellung","zamówienie","Pl.: die Bestellungen",[["","Meine Bestellung ist noch nicht angekommen.","Moje zamówienie jeszcze nie dotarło."]],"Zakupy",""],["verb","kaufen","kupować","kauft · kaufte · hat gekauft",[["Präsens","Ich kaufe heute Brot und Käse.","Kupuję dziś chleb i ser."],["Präteritum","Er kaufte ihr einen Ring.","Kupił jej pierścionek."],["Perfekt","Wir haben ein neues Sofa gekauft.","Kupiliśmy nową sofę."]],"Czasowniki",""],["word","die Lieferung","dostawa","Pl.: die Lieferungen",[["","Die Lieferung kommt zwischen zehn und zwölf Uhr.","Dostawa przyjedzie między dziesiątą a dwunastą."]],"Zakupy",""],["phrase","Es lohnt sich","Warto","",[["","Es lohnt sich, früh anzufangen.","Warto zacząć wcześnie."]],"Potoczne zwroty",""],["sentence","Er war schon gegangen, als ich ankam.","Już poszedł, kiedy przyjechałem.","war/hatte + Partizip II: czynność wcześniejsza niż inna czynność w przeszłości.",[],"Zdania w czasach","Plusquamperfekt"],["word","der Rest","reszta, resztka","Pl.: die Reste",[["","Möchtest du den Rest haben?","Chcesz resztę?"]],"Zakupy",""],["verb","sollen (odmiana)","mieć (coś zrobić), powinien","Präsens: ich soll · du sollst · er soll · wir sollen · ihr sollt · sie sollen\nPräteritum: ich sollte · du solltest · er sollte · wir sollten · ihr solltet · sie sollten\nKonjunktiv II: ich sollte (grzeczna rada: powinieneś)",[["Präsens (polecenie)","Ich soll morgen früher kommen.","Mam jutro przyjść wcześniej."],["Konjunktiv II (rada)","Du solltest mehr Wasser trinken.","Powinieneś pić więcej wody."],["Präteritum","Er sollte um acht da sein.","Miał być o ósmej."]],"Odmiany",""],["phrase","Das kommt mir bekannt vor","To wygląda znajomo","",[["","Dieses Lied kommt mir bekannt vor.","Ta piosenka brzmi znajomo."]],"Potoczne zwroty",""],["phrase","Przyimki z Dativ","zawsze celownik","aus · bei · mit · nach · seit · von · zu · gegenüber",[["","Ich fahre mit dem Zug zu meinen Eltern.","Jadę pociągiem do rodziców."],["","Seit einem Monat wohne ich bei meiner Tante.","Od miesiąca mieszkam u cioci."]],"Odmiany i gramatyka",""],["word","das Kleingeld","drobne, bilon","Pl.: brak",[["","Haben Sie vielleicht Kleingeld?","Czy ma Pan lub Pani może drobne?"]],"Zakupy",""],["verb","arbeiten","pracować","arbeitet · arbeitete · hat gearbeitet",[["Präsens","Er arbeitet bei einer Bank.","Pracuje w banku."],["Präteritum","Früher arbeitete sie im Ausland.","Dawniej pracowała za granicą."],["Perfekt","Ich habe gestern bis acht gearbeitet.","Wczoraj pracowałem do ósmej."]],"Czasowniki",""],["word","das Gehalt","pensja","Pl.: die Gehälter",[["","Das Gehalt wird am Monatsende überwiesen.","Pensja jest przelewana na koniec miesiąca."]],"Praca i biuro",""],["phrase","Mir ist egal, …","Jest mi obojętne, …","",[["","Mir ist egal, was wir essen.","Jest mi obojętne, co zjemy."]],"Potoczne zwroty",""],["sentence","Ich werde dir später alles erklären.","Wytłumaczę ci wszystko później.","werden + bezokolicznik na końcu. W mowie często wystarczy Präsens: Ich erkläre es dir später.",[],"Zdania w czasach","Futur I (zamiar)"],["word","der Urlaub","urlop","Pl.: die Urlaube (rzadko)",[["","Ich habe nächste Woche Urlaub.","W przyszłym tygodniu mam urlop."]],"Praca i biuro",""],["verb","dürfen (odmiana)","wolno, mieć pozwolenie","Präsens: ich darf · du darfst · er darf · wir dürfen · ihr dürft · sie dürfen\nPräteritum: ich durfte · du durftest · er durfte · wir durften · ihr durftet · sie durften\nKonjunktiv II: ich dürfte (przypuszczenie lub bardzo grzeczne pytanie)",[["Präsens","Darf ich kurz stören?","Mogę na chwilę przeszkodzić?"],["Präsens (zakaz)","Hier darf man nicht rauchen.","Tu nie wolno palić."],["Präteritum","Als Kind durfte ich nie lange fernsehen.","Jako dziecko nigdy nie wolno mi było długo oglądać telewizji."]],"Odmiany",""],["phrase","keine Lust haben","nie mieć ochoty","",[["","Heute habe ich keine Lust zu kochen.","Dziś nie mam ochoty gotować."]],"Potoczne zwroty",""],["phrase","Przyimki z Akkusativ","zawsze biernik","durch · für · gegen · ohne · um",[["","Das Geschenk ist für dich.","Ten prezent jest dla ciebie."],["","Ohne dich wäre das nicht möglich gewesen.","Bez ciebie to nie byłoby możliwe."]],"Odmiany i gramatyka",""],["word","die Stelle","posada, stanowisko","Pl.: die Stellen",[["","Sie hat eine neue Stelle gefunden.","Znalazła nową posadę."]],"Praca i biuro",""],["verb","wohnen","mieszkać","wohnt · wohnte · hat gewohnt",[["Präsens","Wir wohnen im dritten Stock.","Mieszkamy na trzecim piętrze."],["Präteritum","Damals wohnte ich noch bei meinen Eltern.","Wtedy jeszcze mieszkałem u rodziców."],["Perfekt","Wie lange hast du in Berlin gewohnt?","Jak długo mieszkałeś w Berlinie?"]],"Czasowniki",""],["word","die Aufgabe","zadanie","Pl.: die Aufgaben",[["","Meine Hauptaufgabe ist die Kundenbetreuung.","Moim głównym zadaniem jest obsługa klientów."]],"Praca i biuro",""],["phrase","Das war knapp","O mało co, było blisko","",[["","Das war knapp! Ich habe den Zug gerade noch erwischt.","O mało co! Zdążyłem na pociąg w ostatniej chwili."]],"Potoczne zwroty",""],["sentence","An deiner Stelle würde ich das nicht tun.","Na twoim miejscu bym tego nie robił.","An deiner Stelle + würde + bezokolicznik: rada.",[],"Zdania w czasach","Konjunktiv II (rada)"],["word","der Vertrag","umowa, kontrakt","Pl.: die Verträge",[["","Der Vertrag läuft bis Ende des Jahres.","Umowa obowiązuje do końca roku."]],"Praca i biuro",""],["verb","mögen / möchten (odmiana)","lubić / chcieć (grzecznie)","mögen: ich mag · du magst · er mag · wir mögen · ihr mögt · sie mögen\nPräteritum: ich mochte · du mochtest · er mochte\nmöchten: ich möchte · du möchtest · er möchte · wir möchten · ihr möchtet · sie möchten",[["mögen","Ich mag keinen Fisch.","Nie lubię ryb."],["möchten","Ich möchte einen Kaffee, bitte.","Poproszę kawę."],["Präteritum","Als Kind mochte ich keinen Fisch.","Jako dziecko nie lubiłem ryb."]],"Odmiany",""],["phrase","sich Mühe geben","starać się","",[["","Gib dir Mühe, dann klappt es.","Postaraj się, to się uda."]],"Potoczne zwroty",""],["phrase","Przyimki zmienne: wo? czy wohin?","in · an · auf · über · unter · vor · hinter · neben · zwischen","wo? (miejsce) → Dativ\nwohin? (kierunek) → Akkusativ",[["wo? Dativ","Ich bin in der Küche.","Jestem w kuchni."],["wohin? Akkusativ","Ich gehe in die Küche.","Idę do kuchni."],["wo? Dativ","Das Bild hängt an der Wand.","Obraz wisi na ścianie."]],"Odmiany i gramatyka",""],["word","die Schicht","zmiana (w pracy)","Pl.: die Schichten",[["","Heute habe ich Spätschicht.","Dziś mam późną zmianę."]],"Praca i biuro",""],["verb","brauchen","potrzebować","braucht · brauchte · hat gebraucht",[["Präsens","Ich brauche mehr Zeit.","Potrzebuję więcej czasu."],["Präteritum","Wir brauchten eine Stunde bis zum Bahnhof.","Do dworca jechaliśmy godzinę."],["Perfekt","Das hat länger gebraucht als gedacht.","To trwało dłużej, niż myślano."]],"Czasowniki",""],["word","die Verantwortung","odpowiedzialność","Pl.: brak",[["","Er übernimmt die Verantwortung für das Projekt.","Przejmuje odpowiedzialność za projekt."]],"Praca i biuro",""],["phrase","in Kauf nehmen","pogodzić się z czymś, zaakceptować","",[["","Dafür nehme ich den langen Weg in Kauf.","Dla tego godzę się na długą drogę."]],"Potoczne zwroty",""],["sentence","Ich wäre froh, wenn du mir helfen könntest.","Byłbym zadowolony, gdybyś mógł mi pomóc.","wäre … wenn + Konjunktiv II (könntest). Grzeczna, nierzeczywista prośba.",[],"Zdania w czasach","Konjunktiv II (życzenie)"],["word","die Weiterbildung","szkolenie, dokształcanie","Pl.: die Weiterbildungen",[["","Die Firma bezahlt meine Weiterbildung.","Firma płaci za moje szkolenie."]],"Praca i biuro",""],["verb","arbeiten (odmiana, końcówka -et)","pracować","Präsens: ich arbeite · du arbeitest · er arbeitet · wir arbeiten · ihr arbeitet · sie arbeiten\nPräteritum: ich arbeitete · du arbeitetest · er arbeitete · wir arbeiteten · ihr arbeitetet · sie arbeiteten\nPerfekt: ich habe gearbeitet\nZasada: po -t, -d, -m, -n przed końcówką dochodzi -e- (arbeitest, findet, öffnet)",[["Präsens","Du arbeitest zu viel.","Za dużo pracujesz."],["Präsens","Er arbeitet bis spät in die Nacht.","Pracuje do późna w nocy."],["Perfekt","Ich habe gestern bis acht gearbeitet.","Wczoraj pracowałem do ósmej."]],"Odmiany",""],["phrase","Ich bin gerade in einer Besprechung","Jestem teraz na spotkaniu","",[["","Ich bin gerade in einer Besprechung. Kann ich zurückrufen?","Jestem teraz na spotkaniu. Mogę oddzwonić?"]],"Praca i biuro",""],["phrase","Szyk zdania","gdzie stoi czasownik","zdanie główne: odmieniony czasownik na 2. miejscu\nzdanie podrzędne (weil, dass, ob): czasownik na końcu\npytanie bez słowa pytającego: czasownik na 1. miejscu\nczas złożony: odmieniona część na 2., Partizip lub bezokolicznik na końcu",[["","Morgen gehe ich mit Anna ins Kino.","Jutro idę z Anną do kina."],["","Hast du morgen Zeit?","Masz jutro czas?"],["","Ich habe gestern lange gearbeitet.","Wczoraj długo pracowałem."]],"Odmiany i gramatyka",""],["word","der Stau","korek","Pl.: die Staus",[["","Wegen eines Staus komme ich später.","Przez korek będę później."]],"Podróż",""],["verb","warten","czekać","wartet · wartete · hat gewartet",[["Präsens","Ich warte auf den Bus.","Czekam na autobus."],["Präteritum","Sie wartete ungeduldig auf seine Antwort.","Niecierpliwie czekała na jego odpowiedź."],["Perfekt","Wir haben eine Stunde gewartet.","Czekaliśmy godzinę."]],"Czasowniki",""],["word","die Baustelle","budowa, roboty drogowe","Pl.: die Baustellen",[["","Auf der Autobahn gibt es viele Baustellen.","Na autostradzie jest dużo robót drogowych."]],"Podróż",""],["phrase","Könnten Sie mir das bitte schriftlich bestätigen?","Czy mógłby Pan lub Pani mi to potwierdzić na piśmie?","",[["","Könnten Sie mir das bitte schriftlich bestätigen?","Czy mógłby Pan lub Pani mi to potwierdzić na piśmie?"]],"Praca i biuro",""],["sentence","Er tut so, als ob er nichts wüsste.","Zachowuje się, jakby nic nie wiedział.","als ob + Konjunktiv II: porównanie nierzeczywiste.",[],"Zdania w czasach","Konjunktiv II (als ob)"],["word","die Ampel","sygnalizacja świetlna","Pl.: die Ampeln",[["","Biegen Sie an der Ampel links ab.","Proszę skręcić na światłach w lewo."]],"Podróż",""],["verb","reisen (odmiana, końcówka -s)","podróżować","Präsens: ich reise · du reist · er reist · wir reisen · ihr reist · sie reisen\nPräteritum: ich reiste · du reistest · er reiste\nPerfekt: ich bin gereist\nZasada: po -s, -ß, -z forma du ma tylko -t (du reist, du heißt, du tanzt)",[["Präsens","Du reist viel, oder?","Dużo podróżujesz, prawda?"],["Präteritum","Wir reisten damals mit dem Zug.","Podróżowaliśmy wtedy pociągiem."],["Perfekt","Ich bin schon oft nach Italien gereist.","Podróżowałem już często do Włoch."]],"Odmiany",""],["phrase","Anbei finden Sie …","W załączeniu przesyłam …","",[["","Anbei finden Sie den Vertrag und die Rechnung.","W załączeniu przesyłam umowę i rachunek."]],"Praca i biuro",""],["phrase","Odmiana przymiotnika po ein-","końcówki -er / -e / -es / -en","rodzaj męski: ein großer Tisch\nrodzaj żeński: eine kleine Wohnung\nrodzaj nijaki: ein neues Auto\nAkkusativ męski: einen großen Tisch\nDativ: einem großen Tisch",[["","Ich suche eine kleine Wohnung in der Stadt.","Szukam małego mieszkania w mieście."],["","Er hat ein neues Auto gekauft.","Kupił nowy samochód."],["","Wir haben einen langen Spaziergang gemacht.","Zrobiliśmy długi spacer."]],"Odmiany i gramatyka",""],["word","die Kreuzung","skrzyżowanie","Pl.: die Kreuzungen",[["","An der nächsten Kreuzung müssen Sie rechts abbiegen.","Na następnym skrzyżowaniu musi Pan lub Pani skręcić w prawo."]],"Podróż",""],["verb","fragen","pytać","fragt · fragte · hat gefragt",[["Präsens","Darf ich dich etwas fragen?","Mogę cię o coś zapytać?"],["Präteritum","Er fragte nach dem Weg.","Zapytał o drogę."],["Perfekt","Hast du ihn schon gefragt?","Czy już go zapytałeś?"]],"Czasowniki",""],["word","der Ausweis","dowód tożsamości","Pl.: die Ausweise",[["","Haben Sie Ihren Ausweis dabei?","Czy ma Pan lub Pani przy sobie dowód?"]],"Podróż",""],["phrase","Mit freundlichen Grüßen","Z poważaniem, pozdrawiam (formalnie)","",[["","Vielen Dank für Ihre Hilfe. Mit freundlichen Grüßen, Anna Kowalska","Dziękuję za pomoc. Z poważaniem, Anna Kowalska"]],"Praca i biuro",""],["sentence","Das muss bis Freitag erledigt werden.","To musi być załatwione do piątku.","Modalny + Partizip II + werden na końcu.",[],"Zdania w czasach","Passiv z czasownikiem modalnym"],["word","die Sehenswürdigkeit","atrakcja turystyczna","Pl.: die Sehenswürdigkeiten",[["","Welche Sehenswürdigkeiten sollte man sehen?","Jakie atrakcje warto zobaczyć?"]],"Podróż",""],["phrase","Ich bin bis … im Urlaub","Mam urlop do …","",[["","Ich bin bis zum zehnten Januar im Urlaub.","Mam urlop do dziesiątego stycznia."]],"Praca i biuro",""],["phrase","Konjunktiv II: najważniejsze formy","tryb przypuszczający","sein → wäre\nhaben → hätte\nwerden → würde\nkönnen → könnte\nmüssen → müsste\ndürfen → dürfte\nwissen → wüsste\nkommen → käme · gehen → ginge",[["","Das wäre super!","To by było świetnie!"],["","Ich wüsste gern, wie das funktioniert.","Chciałbym wiedzieć, jak to działa."],["","Mit mehr Zeit hätte ich das besser gemacht.","Mając więcej czasu, zrobiłbym to lepiej."]],"Odmiany i gramatyka",""],["word","die Unterkunft","nocleg, zakwaterowanie","Pl.: die Unterkünfte",[["","Wir haben eine günstige Unterkunft gefunden.","Znaleźliśmy tani nocleg."]],"Podróż",""],["verb","antworten","odpowiadać (+ Dativ)","antwortet · antwortete · hat geantwortet",[["Präsens","Sie antwortet immer sofort.","Ona zawsze odpowiada od razu."],["Präteritum","Er antwortete nicht auf meine Nachricht.","Nie odpowiedział na moją wiadomość."],["Perfekt","Hast du ihr schon geantwortet?","Czy już jej odpowiedziałeś?"]],"Czasowniki",""],["word","das Gefühl","uczucie, przeczucie","Pl.: die Gefühle",[["","Ich habe ein gutes Gefühl dabei.","Mam co do tego dobre przeczucie."]],"Emocje i relacje",""],["phrase","Ich komme darauf zurück","Wrócę do tego","",[["","Ich komme nächste Woche darauf zurück.","Wrócę do tego w przyszłym tygodniu."]],"Praca i biuro",""],["sentence","Hier wird nicht geraucht.","Tu się nie pali.","es-/bezosobowy Passiv: wird + Partizip II, bez podmiotu.",[],"Zdania w czasach","Passiv bezosobowy"],["word","der Stress","stres","Pl.: brak",[["","Ich habe gerade viel Stress bei der Arbeit.","Mam teraz dużo stresu w pracy."]],"Emocje i relacje",""],["phrase","Ich bin unterwegs","Jestem w drodze","",[["","Ich bin unterwegs und komme gleich.","Jestem w drodze i zaraz będę."]],"Plany i umawianie się",""],["phrase","Liczba mnoga rzeczowników","najczęstsze wzory","-e: der Tag → die Tage\n-er (z umlautem): das Kind → die Kinder\n-en lub -n: die Frau → die Frauen\n-s: das Auto → die Autos\nbez końcówki: der Lehrer → die Lehrer\numlaut: der Vater → die Väter",[["","Die Kinder spielen im Garten.","Dzieci bawią się w ogrodzie."],["","Wir haben zwei Autos.","Mamy dwa samochody."]],"Odmiany i gramatyka",""],["word","die Laune","nastrój","Pl.: die Launen",[["","Er hat heute schlechte Laune.","Ma dziś zły nastrój."]],"Emocje i relacje",""],["verb","verlieren","tracić, gubić","verliert · verlor · hat verloren",[["Präsens","Ich verliere ständig meine Schlüssel.","Ciągle gubię klucze."],["Präteritum","Er verlor seinen Job im Frühjahr.","Stracił pracę na wiosnę."],["Perfekt","Ich habe mein Portemonnaie verloren.","Zgubiłem portfel."]],"Czasowniki",""],["word","die Sorge","zmartwienie, troska","Pl.: die Sorgen",[["","Mach dir keine Sorgen.","Nie martw się."]],"Emocje i relacje",""],["phrase","Wie lange dauert das?","Jak długo to potrwa?","",[["","Wie lange dauert die Fahrt bis Köln?","Jak długo trwa podróż do Kolonii?"]],"Podróż",""],["sentence","Als ich ankam, war es schon dunkel.","Kiedy dotarłem, było już ciemno.","als: jednorazowe zdarzenie w przeszłości; wenn: powtarzalne lub przyszłość.",[],"Zdania w czasach","als (jednorazowo w przeszłości)"],["word","das Vertrauen","zaufanie","Pl.: brak",[["","Ich habe volles Vertrauen in sie.","Mam do niej pełne zaufanie."]],"Emocje i relacje",""],["phrase","Ich habe mich verlaufen","Zgubiłem się (pieszo)","",[["","Entschuldigung, ich habe mich verlaufen.","Przepraszam, zgubiłem się."]],"Podróż",""],["phrase","Czasowniki zwrotne: Akkusativ czy Dativ?","sich + czasownik","ich wasche mich (Akkusativ)\nich wasche mir die Hände (Dativ, gdy jest drugi dopełniacz w Akkusativ)\nich freue mich · du freust dich · er freut sich\nwir freuen uns · ihr freut euch · sie freuen sich",[["","Ich putze mir die Zähne.","Myję zęby."],["","Wir freuen uns auf euch.","Cieszymy się na wasz przyjazd."]],"Odmiany i gramatyka",""],["word","die Enttäuschung","rozczarowanie","Pl.: die Enttäuschungen",[["","Das Ergebnis war eine große Enttäuschung.","Wynik był wielkim rozczarowaniem."]],"Emocje i relacje",""],["verb","gewinnen","wygrywać","gewinnt · gewann · hat gewonnen",[["Präsens","Wer gewinnt das Spiel?","Kto wygra mecz?"],["Präteritum","Unsere Mannschaft gewann 3:1.","Nasza drużyna wygrała 3:1."],["Perfekt","Ich habe noch nie etwas gewonnen.","Nigdy jeszcze niczego nie wygrałem."]],"Czasowniki",""],["word","der Ärger","złość, kłopoty","Pl.: brak",[["","Ich hatte viel Ärger mit dem Vermieter.","Miałem dużo kłopotów z właścicielem mieszkania."]],"Emocje i relacje",""],["phrase","Ich habe den Zug verpasst","Uciekł mi pociąg","",[["","Ich habe den Zug verpasst und komme später.","Uciekł mi pociąg i będę później."]],"Podróż",""],["sentence","Immer wenn ich ihn sehe, muss ich lachen.","Za każdym razem, gdy go widzę, muszę się śmiać.","Powtarzalność: immer wenn. Czasownik na końcu zdania podrzędnego.",[],"Zdania w czasach","wenn (powtarzalnie)"],["word","die Geduld","cierpliwość","Pl.: brak",[["","Dafür braucht man viel Geduld.","Do tego potrzeba dużo cierpliwości."]],"Emocje i relacje",""],["phrase","Ich bin damit einverstanden","Zgadzam się na to","",[["","Mit dem Termin bin ich einverstanden.","Zgadzam się z tym terminem."]],"Opinie i dyskusja",""],["word","das Missverständnis","nieporozumienie","Pl.: die Missverständnisse",[["","Das war nur ein Missverständnis.","To było tylko nieporozumienie."]],"Emocje i relacje",""],["verb","passieren","zdarzać się, dziać się","passiert · passierte · ist passiert",[["Präsens","Was passiert hier eigentlich?","Co się tu właściwie dzieje?"],["Präteritum","Der Unfall passierte gestern Abend.","Wypadek zdarzył się wczoraj wieczorem."],["Perfekt","Ist etwas passiert?","Czy coś się stało?"]],"Czasowniki",""],["word","die Ausnahme","wyjątek","Pl.: die Ausnahmen",[["","Heute mache ich eine Ausnahme.","Dziś zrobię wyjątek."]],"Słownictwo ogólne",""],["phrase","Das kommt nicht infrage","Nie ma mowy","",[["","Ein Umzug kommt für uns nicht infrage.","Przeprowadzka nie wchodzi dla nas w grę."]],"Opinie i dyskusja",""],["sentence","Wenn ich Zeit habe, rufe ich dich an.","Jak będę miał czas, zadzwonię do ciebie.","Po zdaniu podrzędnym z wenn czasownik zdania głównego stoi zaraz po przecinku.",[],"Zdania w czasach","wenn (przyszłość)"],["word","die Voraussetzung","warunek wstępny, założenie","Pl.: die Voraussetzungen",[["","Die Voraussetzung ist ein gültiger Ausweis.","Warunkiem jest ważny dowód tożsamości."]],"Słownictwo ogólne",""],["phrase","Es ist mir wichtig, dass …","Zależy mi na tym, żeby …","",[["","Es ist mir wichtig, dass wir pünktlich sind.","Zależy mi na tym, żebyśmy byli punktualni."]],"Opinie i dyskusja",""],["word","gemütlich","przytulny, wygodny","przymiotnik",[["","Die Wohnung ist klein, aber sehr gemütlich.","Mieszkanie jest małe, ale bardzo przytulne."]],"Przymiotniki i przysłówki",""],["verb","gefallen","podobać się (+ Dativ)","gefällt · gefiel · hat gefallen",[["Präsens","Die Wohnung gefällt mir sehr.","Mieszkanie bardzo mi się podoba."],["Präteritum","Der Film gefiel ihr nicht.","Film jej się nie podobał."],["Perfekt","Hat dir das Konzert gefallen?","Czy koncert ci się podobał?"]],"Czasowniki",""],["word","ehrlich","szczery, uczciwy","przymiotnik",[["","Sei bitte ehrlich zu mir.","Bądź ze mną szczery."]],"Przymiotniki i przysłówki",""],["phrase","Ich würde gern wissen, ob …","Chciałbym wiedzieć, czy …","",[["","Ich würde gern wissen, ob das Hotel ein Frühstück anbietet.","Chciałbym wiedzieć, czy hotel oferuje śniadanie."]],"Opinie i dyskusja",""],["sentence","Ich weiß nicht, ob er kommt.","Nie wiem, czy przyjdzie.","ob = czy (pytanie zależne), czasownik na końcu.",[],"Zdania w czasach","ob"],["word","pünktlich","punktualny","przymiotnik",[["","Der Zug war ausnahmsweise pünktlich.","Pociąg był wyjątkowo punktualny."]],"Przymiotniki i przysłówki",""],["phrase","Ich bin dafür / dagegen","Jestem za / przeciw","",[["","Wer ist für den Vorschlag? – Ich bin dafür.","Kto jest za propozycją? – Ja jestem za."]],"Opinie i dyskusja",""],["word","ausgebucht","wyprzedany, bez wolnych miejsc","przymiotnik",[["","Das Restaurant ist heute ausgebucht.","Restauracja ma dziś komplet rezerwacji."]],"Przymiotniki i przysłówki",""],["verb","gehören","należeć do (+ Dativ)","gehört · gehörte · hat gehört",[["Präsens","Wem gehört dieser Schirm?","Do kogo należy ten parasol?"],["Präteritum","Das Haus gehörte früher meinem Onkel.","Dom należał dawniej do mojego wuja."],["Perfekt","Dieses Fahrrad hat meinem Bruder gehört.","Ten rower należał do mojego brata."]],"Czasowniki",""],["word","kostenlos","bezpłatny","przymiotnik",[["","Der Eintritt ist für Kinder kostenlos.","Wstęp dla dzieci jest bezpłatny."]],"Przymiotniki i przysłówki",""],["phrase","Da hast du recht","Masz w tym rację","",[["","Da hast du völlig recht.","Masz w tym całkowitą rację."]],"Opinie i dyskusja",""],["sentence","Ich lerne Deutsch, um in Berlin zu arbeiten.","Uczę się niemieckiego, żeby pracować w Berlinie.","um … zu przy tym samym podmiocie; przy różnych: damit.",[],"Zdania w czasach","um … zu"],["word","gleichzeitig","jednocześnie","przysłówek",[["","Ich kann nicht alles gleichzeitig machen.","Nie mogę robić wszystkiego jednocześnie."]],"Przymiotniki i przysłówki",""],["phrase","Es tut mir leid, dass …","Przykro mi, że …","",[["","Es tut mir leid, dass ich zu spät bin.","Przykro mi, że się spóźniłem."]],"Opinie i dyskusja",""],["word","plötzlich","nagle","przysłówek",[["","Plötzlich ging das Licht aus.","Nagle zgasło światło."]],"Przymiotniki i przysłówki",""],["verb","bestellen","zamawiać","bestellt · bestellte · hat bestellt",[["Präsens","Ich bestelle uns eine Pizza.","Zamawiam nam pizzę."],["Präteritum","Wir bestellten zweimal Pasta.","Zamówiliśmy dwa razy makaron."],["Perfekt","Hast du schon bestellt?","Czy już zamówiłeś?"]],"Czasowniki",""],["word","endlich","wreszcie","przysłówek",[["","Endlich ist Wochenende!","Wreszcie weekend!"]],"Przymiotniki i przysłówki",""],["phrase","zum Glück","na szczęście","",[["","Zum Glück hat es nicht geregnet.","Na szczęście nie padało."]],"Opinie i dyskusja",""],["sentence","Ich schreibe das auf, damit ich es nicht vergesse.","Zapisuję to, żebym nie zapomniał.","damit + zdanie podrzędne (podmioty mogą być różne).",[],"Zdania w czasach","damit"],["word","inzwischen","tymczasem, w międzyczasie","przysłówek",[["","Inzwischen hat es aufgehört zu regnen.","W międzyczasie przestało padać."]],"Przymiotniki i przysłówki",""],["phrase","im Gegenteil","wręcz przeciwnie","",[["","Stört dich das? – Im Gegenteil, ich finde es gut.","Przeszkadza ci to? – Wręcz przeciwnie, podoba mi się."]],"Opinie i dyskusja",""],["word","vorhin","przed chwilą","przysłówek",[["","Ich habe ihn vorhin gesehen.","Widziałem go przed chwilą."]],"Przymiotniki i przysłówki",""],["verb","ausgeben","wydawać (pieniądze) (rozdzielny)","gibt aus · gab aus · hat ausgegeben",[["Präsens","Ich gebe zu viel Geld für Kaffee aus.","Wydaję za dużo pieniędzy na kawę."],["Präteritum","Er gab sein ganzes Gehalt aus.","Wydał całą swoją pensję."],["Perfekt","Wir haben viel Geld ausgegeben.","Wydaliśmy dużo pieniędzy."]],"Czasowniki",""],["word","neulich","ostatnio, niedawno","przysłówek",[["","Neulich habe ich Anna getroffen.","Niedawno spotkałem Annę."]],"Przymiotniki i przysłówki",""],["phrase","auf keinen Fall","w żadnym wypadku","",[["","Das darfst du auf keinen Fall vergessen.","Tego w żadnym wypadku nie wolno ci zapomnieć."]],"Opinie i dyskusja",""],["sentence","Es war so laut, dass ich nichts verstanden habe.","Było tak głośno, że nic nie zrozumiałem.","so + przymiotnik, dass + skutek (czasownik na końcu).",[],"Zdania w czasach","so … dass"],["word","kaum","ledwo, prawie wcale","przysłówek",[["","Ich habe kaum geschlafen.","Prawie wcale nie spałem."]],"Przymiotniki i przysłówki",""],["phrase","auf jeden Fall","na pewno, w każdym razie","",[["","Ich komme auf jeden Fall.","Na pewno przyjdę."]],"Opinie i dyskusja",""],["word","sowieso","i tak, w każdym razie","przysłówek",[["","Das wollte ich sowieso machen.","Chciałem to i tak zrobić."]],"Przymiotniki i przysłówki",""],["verb","zurückkommen","wracać (rozdzielny)","kommt zurück · kam zurück · ist zurückgekommen",[["Präsens","Wann kommst du zurück?","Kiedy wrócisz?"],["Präteritum","Sie kam erst um Mitternacht zurück.","Wróciła dopiero o północy."],["Perfekt","Er ist noch nicht zurückgekommen.","On jeszcze nie wrócił."]],"Czasowniki",""],["word","jedenfalls","w każdym razie","przysłówek",[["","Jedenfalls war es ein schöner Abend.","W każdym razie był to miły wieczór."]],"Przymiotniki i przysłówki",""],["phrase","vor allem","przede wszystkim","",[["","Vor allem das Essen war toll.","Przede wszystkim jedzenie było świetne."]],"Opinie i dyskusja",""],["sentence","Ich bleibe zu Hause, denn ich bin krank.","Zostaję w domu, bo jestem chory.","denn nie zmienia szyku (jak zdanie główne), weil wysyła czasownik na koniec.",[],"Zdania w czasach","denn a weil"],["word","hoffentlich","mam nadzieję, oby","przysłówek",[["","Hoffentlich klappt alles.","Oby wszystko się udało."]],"Przymiotniki i przysłówki",""],["phrase","Das heißt, …","To znaczy, …","",[["","Das heißt, wir treffen uns um acht.","To znaczy, że spotykamy się o ósmej."]],"Opinie i dyskusja",""],["word","übrigens","à propos, nawiasem mówiąc","przysłówek",[["","Übrigens, hast du Lukas gesehen?","À propos, widziałeś Lukasa?"]],"Przymiotniki i przysłówki",""],["verb","mitkommen","iść razem, jechać razem (rozdzielny)","kommt mit · kam mit · ist mitgekommen",[["Präsens","Kommst du mit?","Idziesz z nami?"],["Präteritum","Er kam nicht mit, weil er arbeiten musste.","Nie poszedł z nami, bo musiał pracować."],["Perfekt","Sie ist gern mitgekommen.","Poszła z nami chętnie."]],"Czasowniki",""],["word","stattdessen","zamiast tego","przysłówek",[["","Es regnet, wir bleiben stattdessen zu Hause.","Pada, zostajemy zamiast tego w domu."]],"Przymiotniki i przysłówki",""],["phrase","wie gesagt","jak już mówiłem","",[["","Wie gesagt, ich habe heute keine Zeit.","Jak już mówiłem, dziś nie mam czasu."]],"Opinie i dyskusja",""],["sentence","Das ist die Frau, der ich geholfen habe.","To kobieta, której pomogłem.","Zaimek względny w Dativ (der), bo helfen łączy się z celownikiem.",[],"Zdania w czasach","Zdanie względne (Dativ)"],["word","zumindest","przynajmniej, co najmniej","przysłówek",[["","Zumindest haben wir einen Platz bekommen.","Przynajmniej dostaliśmy miejsce."]],"Przymiotniki i przysłówki",""],["phrase","Ich habe nichts dagegen","Nie mam nic przeciwko","",[["","Ich habe nichts dagegen, wenn du mitkommst.","Nie mam nic przeciwko temu, żebyś poszedł z nami."]],"Opinie i dyskusja",""],["verb","aussehen","wyglądać (rozdzielny)","sieht aus · sah aus · hat ausgesehen",[["Präsens","Du siehst müde aus.","Wyglądasz na zmęczonego."],["Präteritum","Er sah blass aus.","Wyglądał blado."],["Perfekt","Das hat gut ausgesehen.","To wyglądało dobrze."]],"Czasowniki",""],["sentence","Das ist das Café, in dem wir uns kennengelernt haben.","To kawiarnia, w której się poznaliśmy.","Przyimek stoi przed zaimkiem względnym: in dem.",[],"Zdania w czasach","Zdanie względne z przyimkiem"],["verb","sich anmelden","zapisać się, zameldować się (zwrotny, rozdzielny)","meldet sich an · meldete sich an · hat sich angemeldet",[["Präsens","Ich melde mich für den Kurs an.","Zapisuję się na kurs."],["Präteritum","Er meldete sich online an.","Zalogował się online."],["Perfekt","Hast du dich schon angemeldet?","Czy już się zapisałeś?"]],"Czasowniki",""],["sentence","Ich habe vergessen, dich anzurufen.","Zapomniałem do ciebie zadzwonić.","Przy rozdzielnych zu wchodzi w środek: an-zu-rufen.",[],"Zdania w czasach","Bezokolicznik z zu"],["verb","umziehen","przeprowadzać się (rozdzielny)","zieht um · zog um · ist umgezogen",[["Präsens","Wir ziehen nächsten Monat um.","W przyszłym miesiącu się przeprowadzamy."],["Präteritum","Sie zog nach Hamburg um.","Przeprowadziła się do Hamburga."],["Perfekt","Seid ihr schon umgezogen?","Czy już się przeprowadziliście?"]],"Czasowniki",""],["sentence","Ich wasche mir die Hände.","Myję sobie ręce.","Gdy jest inne dopełnienie w Akkusativ (die Hände), zaimek zwrotny jest w Dativ.",[],"Zdania w czasach","Zaimek zwrotny w Dativ"],["verb","lernen","uczyć się","lernt · lernte · hat gelernt",[["Präsens","Ich lerne jeden Tag zehn Wörter.","Uczę się codziennie dziesięciu słówek."],["Präteritum","Sie lernte schnell Deutsch.","Szybko nauczyła się niemieckiego."],["Perfekt","Wo hast du so gut Deutsch gelernt?","Gdzie nauczyłeś się tak dobrze niemieckiego?"]],"Czasowniki",""],["sentence","Ich gebe es ihm morgen.","Dam mu to jutro.","Zaimki: Akkusativ przed Dativ (es ihm). Rzeczowniki: Dativ przed Akkusativ.",[],"Zdania w czasach","Kolejność dopełnień"],["verb","erklären","tłumaczyć, wyjaśniać","erklärt · erklärte · hat erklärt",[["Präsens","Kannst du mir das bitte erklären?","Możesz mi to wyjaśnić?"],["Präteritum","Der Lehrer erklärte die Regel noch einmal.","Nauczyciel jeszcze raz wyjaśnił regułę."],["Perfekt","Das hat er mir nie erklärt.","Nigdy mi tego nie wyjaśnił."]],"Czasowniki",""],["sentence","Ich habe heute nicht gearbeitet.","Dziś nie pracowałem.","nicht stoi przed Partizip na końcu. Przy rzeczowniku bez rodzajnika: kein.",[],"Zdania w czasach","nicht"],["verb","tragen","nosić, dźwigać","trägt · trug · hat getragen",[["Präsens","Er trägt immer einen Hut.","Zawsze nosi kapelusz."],["Präteritum","Sie trug eine schwere Tasche.","Niosła ciężką torbę."],["Perfekt","Hast du das allein getragen?","Niosłeś to sam?"]],"Czasowniki",""],["sentence","Ich habe keine Zeit und kein Auto.","Nie mam czasu ani samochodu.","kein przeczy rzeczownikowi z ein-/bez rodzajnika; nicht przeczy czasownikowi.",[],"Zdania w czasach","kein"],["verb","öffnen","otwierać","öffnet · öffnete · hat geöffnet",[["Präsens","Die Bank öffnet um neun.","Bank otwiera się o dziewiątej."],["Präteritum","Er öffnete leise die Tür.","Cicho otworzył drzwi."],["Perfekt","Wer hat das Fenster geöffnet?","Kto otworzył okno?"]],"Czasowniki",""],["sentence","Dieses Jahr war wärmer als letztes Jahr.","Ten rok był cieplejszy niż zeszły.","Przymiotnik + -er + als: wärmer als.",[],"Zdania w czasach","Stopień wyższy"],["verb","schließen","zamykać","schließt · schloss · hat geschlossen",[["Präsens","Das Museum schließt um sechs.","Muzeum zamyka się o szóstej."],["Präteritum","Sie schloss die Tür hinter sich.","Zamknęła za sobą drzwi."],["Perfekt","Ich habe das Fenster geschlossen.","Zamknąłem okno."]],"Czasowniki",""],["sentence","Das ist das beste Restaurant der Stadt.","To najlepsza restauracja w mieście.","am …sten lub rodzajnik + …ste: das beste. Nieregularnie: gut, besser, am besten.",[],"Zdania w czasach","Stopień najwyższy"],["sentence","Ich habe einen neuen Job gefunden.","Znalazłem nową pracę.","ein + rodzaj męski w Akkusativ: einen neuen.",[],"Zdania w czasach","Odmiana przymiotnika"],["sentence","Je mehr ich übe, desto besser werde ich.","Im więcej ćwiczę, tym lepszy jestem.","je + zdanie podrzędne, desto + stopień wyższy (czasownik od razu po desto + przymiotnik).",[],"Zdania w czasach","je … desto"]];
+var TYPE_LABEL={word:'słowo',verb:'czasownik',phrase:'zwrot',sentence:'zdanie'};
+var STARTER=DECK.map(function(r,i){
+  return {id:'g'+(i+1),type:r[0],de:r[1],pl:r[2],info:r[3],ex:r[4].map(function(e){return {l:e[0],de:e[1],pl:e[2]}}),cat:r[5],tense:r[6]||'',custom:false};
+});
+var MIN=60000, HOUR=3600000, DAY=86400000, STEPS=[1,10], RELEARN=[10], AHEAD=20*MIN;
+var LS_KEY='deutsch-anki-v2';
 
-// --- ZWROTY ---
-["Zwrot","Na, wie geht's?","No, jak leci?","Na, wie geht's? – Gut, und dir?","No, jak leci? – Dobrze, a tobie?","potocznie"],
-["Zwrot","Kein Problem.","Nie ma problemu.","Kannst du mir helfen? – Kein Problem.","Możesz mi pomóc? – Nie ma sprawy.",""],
-["Zwrot","Keine Ahnung.","Nie mam pojęcia.","Wo ist Tom? – Keine Ahnung.","Gdzie jest Tom? – Nie mam pojęcia.","potocznie"],
-["Zwrot","Ich habe keine Lust.","Nie mam ochoty.","Ich habe heute keine Lust zu kochen.","Nie mam dziś ochoty gotować.","keine Lust haben auf/zu"],
-["Zwrot","Das kommt darauf an.","To zależy.","Kommst du mit? – Das kommt darauf an.","Idziesz? – To zależy.",""],
-["Zwrot","Stimmt so.","Reszty nie trzeba.","Das macht 12 Euro. – Stimmt so!","To 12 euro. – Reszty nie trzeba!","napiwek"],
-["Zwrot","Alles klar.","Jasne, w porządku.","Wir treffen uns um acht. – Alles klar.","Spotykamy się o 8. – Jasne.",""],
-["Zwrot","Mach dir keine Sorgen.","Nie martw się.","Mach dir keine Sorgen, das schaffen wir.","Nie martw się, damy radę.","Imperativ"],
-["Zwrot","Ich bin dabei.","Wchodzę w to.","Wir gehen essen. – Ich bin dabei!","Idziemy na kolację. – Wchodzę w to!",""],
-["Zwrot","Wie bitte?","Słucham?","Wie bitte? Ich habe dich nicht gehört.","Słucham? Nie usłyszałem cię.",""],
-["Zwrot","Ich drücke dir die Daumen.","Trzymam kciuki.","Morgen ist deine Prüfung – ich drücke dir die Daumen!","Jutro twój egzamin – trzymam kciuki!",""],
-["Zwrot","Was ist los?","Co się dzieje?","Du siehst traurig aus. Was ist los?","Wyglądasz na smutnego. Co jest?",""],
-["Zwrot","Das ist mir egal.","Wszystko mi jedno.","Pizza oder Pasta? – Das ist mir egal.","Pizza czy makaron? – Wszystko jedno.",""],
-["Zwrot","Das macht nichts.","Nic nie szkodzi.","Ich bin zu spät. – Das macht nichts.","Spóźniłem się. – Nic nie szkodzi.",""],
-["Zwrot","Ich muss los.","Muszę lecieć.","Ich muss los, mein Bus kommt gleich.","Muszę lecieć, zaraz autobus.",""],
-["Zwrot","Bis später!","Do później!","Ich gehe jetzt. Bis später!","Idę teraz. Do później!",""],
-["Zwrot","Das passt mir gut.","Pasuje mi.","Treffen wir uns um sechs? – Das passt mir gut.","Spotkajmy się o 6? – Pasuje mi.",""],
-["Zwrot","Wie lange dauert das?","Jak długo to trwa?","Wie lange dauert die Fahrt nach München?","Jak długo trwa podróż do Monachium?",""],
-["Zwrot","Könnten Sie das bitte wiederholen?","Czy mógłby Pan to powtórzyć?","Entschuldigung, könnten Sie das bitte wiederholen?","Przepraszam, mógłby Pan powtórzyć?","Konjunktiv II – grzecznie"],
-["Zwrot","Ich hätte gern …","Poproszę …","Ich hätte gern einen Kaffee und ein Wasser.","Poproszę kawę i wodę.","Konjunktiv II"],
-["Zwrot","Das ist mir peinlich.","Głupio mi / wstydzę się.","Das ist mir total peinlich.","Strasznie mi głupio.",""],
-["Zwrot","Gar nicht schlecht!","Całkiem nieźle!","Wie war der Film? – Gar nicht schlecht!","Jaki był film? – Całkiem niezły!",""],
-["Zwrot","Gute Besserung!","Szybkiego powrotu do zdrowia!","Du bist krank? Gute Besserung!","Jesteś chory? Wyzdrowiej!",""],
-["Zwrot","Herzlichen Glückwunsch!","Serdeczne gratulacje!","Herzlichen Glückwunsch zum Geburtstag!","Wszystkiego najlepszego z okazji urodzin!",""],
-["Zwrot","Es tut mir leid.","Przykro mi / przepraszam.","Es tut mir leid, das wollte ich nicht.","Przepraszam, nie chciałem tego.",""],
-["Zwrot","Ich habe es satt.","Mam tego dość.","Ich habe dieses Wetter satt.","Mam dość tej pogody.","potocznie"],
-["Zwrot","Lass uns gehen!","Chodźmy!","Lass uns ins Café gehen!","Chodźmy do kawiarni!","Imperativ + uns"],
-["Zwrot","Ich komme gleich.","Zaraz przyjdę.","Warte kurz, ich komme gleich.","Poczekaj, zaraz przyjdę.",""],
-["Zwrot","Es lohnt sich.","To się opłaca / warto.","Der Film ist lang, aber es lohnt sich.","Film jest długi, ale warto.","sich lohnen"],
-["Zwrot","Hals- und Beinbruch!","Połamania nóg! (powodzenia)","Morgen ist die Prüfung – Hals- und Beinbruch!","Jutro egzamin – połamania nóg!","idiom"],
+/* ---------- stan i zapis ---------- */
+var state=blank();
+function blank(){ return {custom:[],progress:{},settings:{newPerDay:20},newDay:{d:'',n:0},updated:0}; }
+var dbDoc=null, writing=false, dirty=false, saveTimer=null, loadTimer=null, cloudOk=false, downloadsNS=null;
 
-// --- ZDANIA w różnych czasach ---
-["Zdanie","Ich arbeite jeden Tag von neun bis fünf.","Pracuję codziennie od 9 do 17.","","","Präsens"],
-["Zdanie","Nächste Woche fahre ich nach Hamburg.","W przyszłym tygodniu jadę do Hamburga.","","","Präsens – przyszłość"],
-["Zdanie","Gestern habe ich lange geschlafen.","Wczoraj długo spałem.","","","Perfekt (haben)"],
-["Zdanie","Am Samstag sind wir ins Kino gegangen.","W sobotę poszliśmy do kina.","","","Perfekt (sein – ruch)"],
-["Zdanie","Als Kind wohnte ich in Krakau.","Jako dziecko mieszkałem w Krakowie.","","","Präteritum"],
-["Zdanie","Es war gestern sehr voll in der Stadt.","Wczoraj było bardzo tłoczno.","","","Präteritum (sein)"],
-["Zdanie","Ich hatte keine Zeit, deshalb habe ich nicht angerufen.","Nie miałem czasu, dlatego nie zadzwoniłem.","","","Prät. + Perfekt"],
-["Zdanie","Morgen werde ich früher aufstehen.","Jutro wstanę wcześniej.","","","Futur I"],
-["Zdanie","Nachdem ich gegessen hatte, bin ich spazieren gegangen.","Po tym jak zjadłem, poszedłem na spacer.","","","Plusquamperfekt"],
-["Zdanie","Ich würde gern mehr reisen.","Chciałbym więcej podróżować.","","","Konjunktiv II"],
-["Zdanie","Wenn ich Zeit hätte, würde ich kommen.","Gdybym miał czas, przyszedłbym.","","","Konj. II – warunek"],
-["Zdanie","Das Paket wurde gestern geliefert.","Paczka została wczoraj dostarczona.","","","Passiv Prät."],
-["Zdanie","Hier darf nicht geraucht werden.","Tutaj nie wolno palić.","","","Passiv + modal"],
-["Zdanie","Warte kurz, ich komme gleich!","Poczekaj, zaraz przyjdę!","","","Imperativ"],
-["Zdanie","Ich bleibe zu Hause, weil ich krank bin.","Zostaję w domu, bo jestem chory.","","","Nebensatz weil"],
-["Zdanie","Ich glaube, dass er recht hat.","Myślę, że on ma rację.","","","Nebensatz dass"],
-["Zdanie","Ich habe vergessen, dich anzurufen.","Zapomniałem do ciebie zadzwonić.","","","zu + Infinitiv"],
-["Zdanie","Hast du Lust, heute Abend essen zu gehen?","Masz ochotę pójść na kolację?","","","zu + Infinitiv"],
-["Zdanie","Ich wollte dich anrufen, aber mein Akku war leer.","Chciałem zadzwonić, ale padła bateria.","","","Prät. modal + aber"],
-["Zdanie","Wenn es morgen regnet, bleiben wir zu Hause.","Jeśli jutro pada, zostajemy w domu.","","","wenn – warunek realny"],
-["Zdanie","Ich habe mich gestern mit Lena getroffen.","Spotkałem się wczoraj z Leną.","","","Perfekt zwrotny"],
-["Zdanie","Seit drei Monaten lerne ich Deutsch.","Od 3 miesięcy uczę się niemieckiego.","","","seit + Präsens"],
-["Zdanie","Bevor ich ins Bett gehe, putze ich mir die Zähne.","Zanim idę spać, myję zęby.","","","bevor + Nebensatz"],
-["Zdanie","Obwohl es geregnet hat, sind wir spazieren gegangen.","Chociaż padało, poszliśmy na spacer.","","","obwohl + Nebensatz"],
-["Zdanie","Je mehr ich lerne, desto besser verstehe ich.","Im więcej się uczę, tym lepiej rozumiem.","","","je…desto"],
-["Zdanie","Ich hätte das nicht machen sollen.","Nie powinienem był tego robić.","","","Konj. II Vergangenheit"],
-["Zdanie","Falls du Hilfe brauchst, ruf mich an.","Gdybyś potrzebował pomocy, zadzwoń.","","","falls + Imperativ"],
-["Zdanie","Er ist der Mann, den ich gestern getroffen habe.","To mężczyzna, którego wczoraj spotkałem.","","","Relativsatz (Akk)"],
-["Zdanie","Das ist die Stadt, in der ich aufgewachsen bin.","To miasto, w którym dorastałem.","","","Relativsatz (Dat)"],
-];
+function pad(n){ return (n<10?'0':'')+n; }
+function todayKey(){ var d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function newUsed(){ return state.newDay.d===todayKey()?state.newDay.n:0; }
+function newLeft(){ return Math.max(0,state.settings.newPerDay-newUsed()); }
 
-// ============================================================
-//  STAN APLIKACJI
-// ============================================================
-const LS=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){}return d};
-let saved  = LS('de_saved',[]);
-let known  = LS('de_known',[]);
-let custom = LS('de_custom',[]);
-let streak = LS('de_streak',0);
-let lastDay= LS('de_lastDay','');
-let list=[], idx=0, flipped=false, listTab='all';
-
-const save=()=>{localStorage.setItem('de_saved',JSON.stringify(saved));localStorage.setItem('de_known',JSON.stringify(known));localStorage.setItem('de_custom',JSON.stringify(custom));localStorage.setItem('de_streak',JSON.stringify(streak));localStorage.setItem('de_lastDay',JSON.stringify(lastDay))};
-const deck=()=>BASE.concat(custom).map(a=>({cat:a[0],de:a[1],pl:a[2],ex:a[3],exPl:a[4],note:a[5]}));
-const today=()=>new Date().toISOString().slice(0,10);
-
-function checkStreak(){
-  const t=today();
-  if(lastDay!==t){
-    const y=new Date();y.setDate(y.getDate()-1);
-    if(lastDay===y.toISOString().slice(0,10)) streak++;
-    else if(lastDay!==t) streak=1;
-    lastDay=t; save();
+function normalize(o){
+  var s=blank();
+  if(!o||typeof o!=='object') return s;
+  if(Array.isArray(o.custom)){
+    o.custom.forEach(function(c){
+      if(!c||typeof c.id!=='string'||typeof c.de!=='string'||typeof c.pl!=='string') return;
+      var ex=[];
+      if(Array.isArray(c.ex)){
+        c.ex.forEach(function(e){ if(e&&typeof e.de==='string'&&e.de) ex.push({l:String(e.l||''),de:e.de,pl:String(e.pl||'')}); });
+      } else if(c.exDe){ ex.push({l:'',de:String(c.exDe),pl:String(c.exPl||'')}); }
+      var type=['word','verb','phrase','sentence'].indexOf(c.type)>=0?c.type:'phrase';
+      s.custom.push({id:c.id,type:type,de:c.de,pl:c.pl,info:String(c.info||''),ex:ex,cat:String(c.cat||'Moje słowa'),tense:String(c.tense||''),custom:true,added:Number(c.added)||0});
+    });
   }
-  document.getElementById('streakBadge').textContent='🔥 '+streak;
+  if(o.progress&&typeof o.progress==='object'){
+    Object.keys(o.progress).forEach(function(k){
+      var p=o.progress[k];
+      if(p&&typeof p.ivl==='number'&&['l','r','rl'].indexOf(p.st)>=0){
+        s.progress[k]={st:p.st,step:p.step|0,ivl:p.ivl,ease:Number(p.ease)||2.5,due:Number(p.due)||0,reps:p.reps|0,lapses:p.lapses|0,fails:p.fails|0};
+      }
+    });
+  }
+  if(o.settings&&[5,10,20,50,100].indexOf(o.settings.newPerDay)>=0) s.settings.newPerDay=o.settings.newPerDay;
+  if(o.newDay&&typeof o.newDay.d==='string') s.newDay={d:o.newDay.d,n:o.newDay.n|0};
+  s.updated=Number(o.updated)||0;
+  return s;
+}
+function loadLocal(){ try{var r=localStorage.getItem(LS_KEY); if(r) return normalize(JSON.parse(r));}catch(e){} return null; }
+function saveLocal(){ try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){} }
+function setStatus(kind){
+  var msg={
+    load:'Łączę z zapisem…',saving:'Zapisuję…',cloud:'Zapisane na Twoim koncie',local:'Zapisane w tej przeglądarce',
+    fail:'Nie udało się zapisać na koncie. Zmiany są w tej przeglądarce.',
+    slow:'Nie mogę jeszcze połączyć się z zapisem na koncie. Zmiany zapisuję w tej przeglądarce.'
+  };
+  $('#save').setAttribute('data-s',kind==='cloud'?'cloud':(kind==='fail'?'fail':'local'));
+  $('#saveText').textContent=msg[kind]||msg.local;
+}
+function save(){
+  state.updated=Date.now(); saveLocal();
+  setStatus(dbDoc?'saving':'local');
+  clearTimeout(saveTimer); saveTimer=setTimeout(flush,400);
+}
+function flush(){
+  if(!dbDoc) return;
+  if(writing){dirty=true;return;}
+  writing=true; dirty=false;
+  dbDoc.set({custom:state.custom,progress:state.progress,settings:state.settings,newDay:state.newDay,updated:state.updated}).then(function(){
+    cloudOk=true; if(!dirty) setStatus('cloud');
+  }).catch(function(){ setStatus('fail'); }).then(function(){ writing=false; if(dirty) flush(); });
 }
 
-// ============================================================
-//  STUDY
-// ============================================================
-function rebuild(){
-  const cat=document.getElementById('fCat').value, mode=document.getElementById('fMode').value;
-  list=deck().filter(c=>{
-    if(cat&&c.cat!==cat)return false;
-    if(mode==='unk')return saved.includes(c.de);
-    if(mode==='know')return known.includes(c.de);
-    if(mode==='new')return !saved.includes(c.de)&&!known.includes(c.de);
-    return true;
+/* ---------- karty i harmonogram ---------- */
+function allCards(){ return state.custom.concat(STARTER); }
+function cardById(id){ var a=allCards(); for(var i=0;i<a.length;i++){ if(a[i].id===id) return a[i]; } return null; }
+function setDe(el,text){
+  el.textContent='';
+  var m=/^(der|die|das)\s+(.*)$/i.exec(text);
+  if(m){
+    var s=document.createElement('span'); s.className='art art-'+m[1].toLowerCase(); s.textContent=m[1];
+    el.appendChild(s); el.appendChild(document.createTextNode(' '+m[2]));
+  } else el.textContent=text;
+}
+function fmt(ms){
+  if(ms<HOUR) return Math.max(1,Math.round(ms/MIN))+' min';
+  if(ms<DAY) return Math.round(ms/HOUR)+' godz.';
+  var d=ms/DAY;
+  if(d<30) return Math.round(d)+' dn.';
+  if(d<365) return (d/30).toFixed(1).replace('.',',')+' mies.';
+  return (d/365).toFixed(1).replace('.',',')+' r.';
+}
+/* nowy obiekt postępu po ocenie r (1 jeszcze raz, 2 trudne, 3 dobrze, 4 łatwe) */
+function schedule(p,r,now){
+  var q=p?{st:p.st,step:p.step,ivl:p.ivl,ease:p.ease,due:p.due,reps:p.reps,lapses:p.lapses,fails:p.fails}
+         :{st:'l',step:0,ivl:0,ease:2.5,due:now,reps:0,lapses:0,fails:0};
+  q.reps++; if(r===1) q.fails++;
+  if(q.st==='l'){
+    if(r===1){ q.step=0; q.due=now+STEPS[0]*MIN; }
+    else if(r===2){ q.due=now+(q.step===0?Math.round((STEPS[0]+STEPS[1])/2):STEPS[q.step])*MIN; }
+    else if(r===3){
+      if(q.step+1<STEPS.length){ q.step++; q.due=now+STEPS[q.step]*MIN; }
+      else { q.st='r'; q.ivl=1; q.due=now+DAY; }
+    } else { q.st='r'; q.ivl=4; q.due=now+4*DAY; }
+  } else if(q.st==='rl'){
+    if(r<=2){ q.due=now+RELEARN[0]*MIN; }
+    else if(r===3){ q.st='r'; q.due=now+q.ivl*DAY; }
+    else { q.st='r'; q.ivl=q.ivl+1; q.due=now+q.ivl*DAY; }
+  } else {
+    if(r===1){ q.lapses++; q.ease=Math.max(1.3,q.ease-.2); q.ivl=Math.max(1,Math.round(q.ivl*.5)); q.st='rl'; q.step=0; q.due=now+RELEARN[0]*MIN; }
+    else {
+      if(r===2){ q.ease=Math.max(1.3,q.ease-.15); q.ivl=Math.max(q.ivl+1,Math.round(q.ivl*1.2)); }
+      else if(r===3){ q.ivl=Math.max(q.ivl+1,Math.round(q.ivl*q.ease)); }
+      else { q.ease=q.ease+.15; q.ivl=Math.max(q.ivl+1,Math.round(q.ivl*q.ease*1.3)); }
+      q.due=now+q.ivl*DAY;
+    }
+  }
+  return q;
+}
+
+/* ---------- talia i kolejka ---------- */
+var deckSel='all', current=null, curKind='', revealed=false, freeMode=false, freeQueue=[];
+function inDeck(c){
+  if(deckSel==='all') return true;
+  if(deckSel.indexOf('cat:')===0) return c.cat===deckSel.slice(4);
+  return c.type===deckSel.slice(5);
+}
+function counts(filter){
+  var now=Date.now(), n=0, l=0, r=0;
+  allCards().forEach(function(c){
+    if(filter&&!filter(c)) return;
+    var p=state.progress[c.id];
+    if(!p) n++; else if(p.st==='r'){ if(p.due<=now) r++; } else if(p.due<=now+AHEAD) l++;
   });
-  idx=0;flipped=false;renderCard();updateStats();
+  return {n:Math.min(n,newLeft()),l:l,r:r};
 }
-function shuffleDeck(){for(let i=list.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[list[i],list[j]]=[list[j],list[i]]}idx=0;flipped=false;renderCard()}
-function updateStats(){
-  const d=deck(),t=d.length,k=known.length,u=saved.length,n=t-k-u;
-  document.getElementById('sNew').textContent=n;document.getElementById('sKnow').textContent=k;document.getElementById('sUnk').textContent=u;document.getElementById('sTot').textContent=t;
-  document.getElementById('progFill').style.width=(t?Math.round(k/t*100):0)+'%';
+function pickNext(){
+  var now=Date.now(), learnDue=null, revDue=null, firstNew=null, ahead=null, P=state.progress;
+  allCards().forEach(function(c){
+    if(!inDeck(c)) return;
+    var p=P[c.id];
+    if(!p){ if(!firstNew) firstNew=c; return; }
+    if(p.st==='r'){ if(p.due<=now&&(!revDue||p.due<P[revDue.id].due)) revDue=c; }
+    else if(p.due<=now){ if(!learnDue||p.due<P[learnDue.id].due) learnDue=c; }
+    else if(p.due<=now+AHEAD){ if(!ahead||p.due<P[ahead.id].due) ahead=c; }
+  });
+  if(learnDue) return {c:learnDue,k:'learn'};
+  if(revDue) return {c:revDue,k:'rev'};
+  if(firstNew&&newLeft()>0) return {c:firstNew,k:'new'};
+  if(ahead) return {c:ahead,k:'learn'};
+  return null;
 }
-function renderCard(){
-  const w=document.getElementById('cardWrap');
-  if(!list.length){w.innerHTML='<div class="empty-card">Brak kart w tym filtrze 🎉<br>Zmień filtr lub dodaj fiszki</div>';return}
-  const c=list[idx];
-  const isSaved=saved.includes(c.de);
-  w.innerHTML=`
-    <div class="card${flipped?' flipped':''}" onclick="flipCard()">
-      <div class="card-face card-front">
-        <span class="card-cat">${c.cat}</span>
-        ${isSaved?'<span class="card-saved">📌</span>':''}
-        <div class="card-de">${c.de}</div>
-        ${c.ex?'<div class="card-ex">„'+c.ex+'"</div>':''}
-        <div class="card-hint">Dotknij, aby odwrócić</div>
-        <div class="card-num">${idx+1} / ${list.length}</div>
-      </div>
-      <div class="card-face card-back">
-        <span class="card-cat">${c.cat}</span>
-        <div class="card-de" style="font-size:20px;opacity:.7">${c.de}</div>
-        <div class="card-pl">${c.pl}</div>
-        ${c.ex?'<div class="card-ex">„'+c.ex+'"</div>':''}
-        ${c.exPl?'<div class="card-expl">'+c.exPl+'</div>':''}
-        ${c.note?'<div class="card-note">📝 '+c.note+'</div>':''}
-        <div class="card-num">${idx+1} / ${list.length}</div>
-      </div>
-    </div>`;
-  setupSwipe();
+function advance(){
+  revealed=false;
+  if(freeMode){
+    freeQueue=freeQueue.filter(function(id){return !!cardById(id)});
+    current=freeQueue.length?cardById(freeQueue[0]):null; curKind='free';
+    return;
+  }
+  var nx=pickNext();
+  current=nx?nx.c:null; curKind=nx?nx.k:'';
 }
-function flipCard(){flipped=!flipped;renderCard()}
-function go(d){if(!list.length)return;idx=(idx+d+list.length)%list.length;flipped=false;renderCard()}
-function mark(type){
-  if(!list.length)return;
-  checkStreak();
-  const k=list[idx].de;
-  if(type==='unk'||type==='hard'){saved=saved.filter(x=>x!==k);known=known.filter(x=>x!==k);saved.push(k)}
-  else{saved=saved.filter(x=>x!==k);known=known.filter(x=>x!==k);known.push(k)}
+function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+
+function rate(r){
+  if(!current) return;
+  if(freeMode){
+    var id=freeQueue.shift();
+    if(r===1) freeQueue.push(id);
+    advance(); renderStudy(); return;
+  }
+  var now=Date.now(), wasNew=!state.progress[current.id];
+  state.progress[current.id]=schedule(state.progress[current.id],r,now);
+  if(wasNew) state.newDay={d:todayKey(),n:newUsed()+1};
+  save(); advance(); renderStats(); renderStudy();
+}
+
+/* ---------- widok nauki ---------- */
+function renderStats(){
+  var all=counts(null);
+  $('#stDue').textContent=all.n+all.l+all.r;
+  var mature=0; Object.keys(state.progress).forEach(function(k){ var p=state.progress[k]; if(p.st==='r'&&p.ivl>=21&&cardById(k)) mature++; });
+  $('#stMature').textContent=mature;
+  $('#stAll').textContent=allCards().length;
+}
+function optionEl(v,t){ var o=document.createElement('option'); o.value=v; o.textContent=t; return o; }
+function renderDecks(){
+  var sel=$('#deckSel'), cats=[], seen={};
+  allCards().forEach(function(c){ if(!seen[c.cat]){seen[c.cat]=1; cats.push(c.cat);} });
+  if(deckSel.indexOf('cat:')===0&&cats.indexOf(deckSel.slice(4))<0) deckSel='all';
+  sel.textContent='';
+  sel.appendChild(optionEl('all','Wszystkie talie'));
+  var g1=document.createElement('optgroup'); g1.label='Rodzaj karty';
+  [['type:verb','Czasowniki'],['type:word','Słownictwo'],['type:phrase','Zwroty'],['type:sentence','Zdania w czasach']].forEach(function(x){ g1.appendChild(optionEl(x[0],x[1])); });
+  sel.appendChild(g1);
+  var g2=document.createElement('optgroup'); g2.label='Kategoria';
+  cats.forEach(function(c){ g2.appendChild(optionEl('cat:'+c,c)); });
+  sel.appendChild(g2);
+  sel.value=deckSel;
+  var dl=$('#catList'); dl.textContent='';
+  cats.forEach(function(c){ var x=document.createElement('option'); x.value=c; dl.appendChild(x); });
+  $('#newSel').value=String(state.settings.newPerDay);
+}
+function renderStudy(){
+  var cn=counts(inDeck);
+  $('#nNew').textContent=cn.n; $('#nLearn').textContent=cn.l; $('#nRev').textContent=cn.r;
+  ['New','Learn','Rev'].forEach(function(k){ $('#k'+k).classList.remove('cur'); });
+  if(current&&!freeMode&&!state.progress[current.id]) $('#kNew').classList.add('cur');
+  else if(current&&!freeMode&&state.progress[current.id]) $((state.progress[current.id].st==='r')?'#kRev':'#kLearn').classList.add('cur');
+  $('#modeNote').hidden=!freeMode; $('#exitFree').hidden=!freeMode;
+  var has=!!current;
+  $('#studyCard').hidden=false;
+  $('.sign').hidden=!has; $('#revealRow').hidden=!has||revealed; $('#rateRow').hidden=!has||!revealed;
+  $('#studyEmpty').hidden=has;
+  if(!has){ renderEmpty(); return; }
+  var c=current, sentence=c.type==='sentence';
+  $('#cTag').textContent=c.cat; $('#cType').textContent=TYPE_LABEL[c.type]||'zwrot';
+  var front=$('#cFront'), sub=$('#cSub');
+  if(sentence){
+    front.textContent=c.pl; front.className='de long'; front.removeAttribute('lang');
+    sub.hidden=false; sub.textContent='Powiedz po niemiecku'+(c.tense?' · czas: '+c.tense:'');
+  } else {
+    setDe(front,c.de); front.className='de'+(c.de.length>28?' long':''); front.setAttribute('lang','de');
+    sub.hidden=(c.type!=='verb'); sub.textContent='czasownik · formy po odpowiedzi';
+  }
+  $('#cBack').hidden=!revealed;
+  if(revealed){
+    var main=$('#cMain');
+    if(sentence){ main.textContent=c.de; main.setAttribute('lang','de'); } else { main.textContent=c.pl; main.removeAttribute('lang'); }
+    var info=$('#cInfo'); info.textContent=c.info||''; info.hidden=!c.info;
+    var exs=$('#cExs'); exs.textContent='';
+    c.ex.forEach(function(e){
+      var d=document.createElement('div'); d.className='ex';
+      if(e.l){ var l=document.createElement('span'); l.className='lab'; l.textContent=e.l; d.appendChild(l); }
+      var a=document.createElement('p'); a.className='xde'; a.lang='de'; a.textContent=e.de; d.appendChild(a);
+      if(e.pl){ var b=document.createElement('p'); b.className='xpl'; b.textContent=e.pl; d.appendChild(b); }
+      exs.appendChild(d);
+    });
+    var now=Date.now(), p=state.progress[c.id];
+    for(var r=1;r<=4;r++){ $('#iv'+r).textContent=freeMode?'':fmt(schedule(p,r,now).due-now); }
+  }
+  var p0=state.progress[c.id], st;
+  if(freeMode) st='Ćwiczenie · zostało '+freeQueue.length;
+  else if(!p0) st='Nowa karta';
+  else if(p0.st==='r') st='Interwał '+p0.ivl+' dn.';
+  else st='W nauce';
+  $('#cStatus').textContent=st;
+  $('#cHelp').textContent=revealed?'1 · 2 · 3 · 4':'spacja';
+  $('#speak').hidden=!('speechSynthesis' in window);
+}
+function renderEmpty(){
+  var now=Date.now(), next=null, P=state.progress;
+  allCards().forEach(function(c){ if(!inDeck(c)) return; var p=P[c.id]; if(p&&p.due>now&&(next===null||p.due<next)) next=p.due; });
+  var hasNew=false; allCards().forEach(function(c){ if(inDeck(c)&&!P[c.id]) hasNew=true; });
+  var t='Powtórki w tej talii są zrobione.';
+  if(next!==null) t+=' Następna karta wróci za '+fmt(next-now)+'.';
+  if(hasNew&&newLeft()===0) t+=' Dzienny limit nowych kart ('+state.settings.newPerDay+') jest wyczerpany.';
+  $('#emptyText').textContent=t;
+  $('#moreNew').hidden=!(hasNew&&newLeft()===0);
+  var any=allCards().some(inDeck); $('#freeBtn').hidden=!any;
+}
+function reveal(){ if(!current||revealed) return; revealed=true; renderStudy(); }
+
+/* ---------- dodawanie ---------- */
+function say(el,text,err){ el.textContent=text; el.className='msg'+(err?' err':''); }
+var FORM_TEXT={
+  word:{de:'Słowo po niemiecku (z rodzajnikiem)',pl:'Znaczenie po polsku',info:'Liczba mnoga (opcjonalnie)',ph:'np. die Haltestelle',phi:'np. Pl.: die Haltestellen',ex:true,req:true},
+  verb:{de:'Czasownik po niemiecku (bezokolicznik)',pl:'Znaczenie po polsku',info:'Formy: 3. os. · Präteritum · Perfekt',ph:'np. abholen',phi:'np. holt ab · holte ab · hat abgeholt',ex:true,req:true},
+  phrase:{de:'Zwrot po niemiecku',pl:'Znaczenie po polsku',info:'Uwagi (opcjonalnie)',ph:'np. Das passt mir gut',phi:'np. nieformalnie',ex:true,req:false},
+  sentence:{de:'Zdanie po niemiecku',pl:'Tłumaczenie na polski (to zobaczysz na przodzie karty)',info:'Czas lub reguła (opcjonalnie)',ph:'np. Gestern habe ich lange gearbeitet.',phi:'np. Perfekt: haben + Partizip II',ex:false,req:false}
+};
+function updateForm(){
+  var t=FORM_TEXT[$('#f-type').value];
+  $('#l-de').textContent=t.de; $('#l-pl').textContent=t.pl; $('#l-info').textContent=t.info;
+  $('#f-de').placeholder=t.ph; $('#f-info').placeholder=t.phi;
+  $('#g-ex').hidden=!t.ex; $('#f-exde').required=t.req;
+  $('#l-exde').textContent=t.req?'Przykład w zdaniu po niemiecku (wymagany)':'Przykład w zdaniu po niemiecku (opcjonalnie)';
+}
+function addCard(ev){
+  ev.preventDefault();
+  var type=$('#f-type').value, msg=$('#addMsg'), T=FORM_TEXT[type];
+  var de=$('#f-de').value.trim(), pl=$('#f-pl').value.trim(), exde=$('#f-exde').value.trim();
+  if(!de||!pl){ say(msg,'Wpisz tekst po niemiecku i po polsku.',true); return; }
+  if(T.req&&!exde){ say(msg,'Do słowa i czasownika dodaj przykład w zdaniu.',true); return; }
+  var key=de.toLowerCase();
+  if(allCards().some(function(c){return c.de.toLowerCase()===key})){ say(msg,'Masz już taką kartę: '+de+'.',true); return; }
+  var ex=[];
+  if(T.ex&&exde) ex.push({l:$('#f-tense').value.trim(),de:exde,pl:$('#f-expl').value.trim()});
+  var card={
+    id:'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),
+    type:type,de:de,pl:pl,info:$('#f-info').value.trim(),ex:ex,
+    cat:$('#f-cat').value.trim()||'Moje słowa',tense:'',custom:true,added:Date.now()
+  };
+  state.custom.unshift(card);
   save();
-  const mode=document.getElementById('fMode').value;
-  if(mode==='new'||mode==='unk'||mode==='know'){list.splice(idx,1);if(idx>=list.length)idx=0;flipped=false;renderCard();updateStats();return}
-  go(1);updateStats();
+  say(msg,'Zapisano: '+de+'. Masz '+state.custom.length+' własnych kart.',false);
+  ['#f-de','#f-pl','#f-info','#f-exde','#f-expl','#f-tense'].forEach(function(s){ $(s).value=''; });
+  $('#f-de').focus();
+  if(!current&&!freeMode) advance();
+  renderAll(true);
 }
 
-// swipe
-let sx=0,sy=0;
-function setupSwipe(){
-  const el=document.querySelector('.card');if(!el)return;
-  el.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
-  el.addEventListener('touchend',e=>{
-    const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
-    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)){e.preventDefault();dx>0?go(-1):go(1)}
+/* ---------- import zbiorczy ---------- */
+var TYPE_ALIAS={word:'word',slowo:'word','słowo':'word',verb:'verb',czasownik:'verb',phrase:'phrase',zwrot:'phrase',sentence:'sentence',zdanie:'sentence'};
+function parseImport(text){
+  var cards=[], errs=[], rows=[], t=text.trim();
+  if(!t) return {cards:cards,errs:['Wklej najpierw tekst z kartami.']};
+  if(t.charAt(0)==='['){
+    var arr; try{ arr=JSON.parse(t); }catch(e){ return {cards:cards,errs:['To nie jest poprawny JSON: '+e.message]}; }
+    if(!Array.isArray(arr)) return {cards:cards,errs:['JSON musi być tablicą kart.']};
+    arr.forEach(function(r,i){
+      if(!Array.isArray(r)||r.length<3){ errs.push('Pozycja '+(i+1)+': za mało pól'); return; }
+      rows.push({n:'Pozycja '+(i+1),type:r[0],de:r[1],pl:r[2],info:r[3]||'',ex:(r[4]||[]).map(function(e){return {l:String(e[0]||''),de:String(e[1]||''),pl:String(e[2]||'')}}),cat:r[5]||'',tense:r[6]||''});
+    });
+  } else {
+    t.split(/\r?\n/).forEach(function(line,i){
+      line=line.trim(); if(!line||line.charAt(0)==='#') return;
+      var f=line.split(line.indexOf('|')>=0?'|':'\t').map(function(x){return x.trim()});
+      if(f.length<3){ errs.push('Wiersz '+(i+1)+': za mało pól'); return; }
+      var type=TYPE_ALIAS[(f[0]||'').toLowerCase()]||'';
+      var row={n:'Wiersz '+(i+1),type:type,de:f[1],pl:f[2],info:f[3]||'',cat:f[4]||'',ex:[],tense:''};
+      if(type==='sentence') row.tense=f[5]||'';
+      else {
+        for(var k=5;k<f.length;k+=2){ if(f[k]) row.ex.push({l:'',de:f[k],pl:f[k+1]||''}); }
+        if(type==='verb'&&row.ex.length===3){ ['Präsens','Präteritum','Perfekt'].forEach(function(l,j){ row.ex[j].l=l; }); }
+      }
+      rows.push(row);
+    });
+  }
+  var seen={}; allCards().forEach(function(c){ seen[c.de.toLowerCase()]=1; });
+  var dups=0, base=Date.now();
+  rows.forEach(function(r,i){
+    var type=TYPE_ALIAS[String(r.type).toLowerCase()]||'';
+    var de=String(r.de||'').trim(), pl=String(r.pl||'').trim();
+    if(!type){ errs.push(r.n+': nieznany typ „'+r.type+'”'); return; }
+    if(!de||!pl){ errs.push(r.n+': brak tekstu niemieckiego lub polskiego'); return; }
+    var ex=(r.ex||[]).filter(function(e){return e.de});
+    if((type==='word'||type==='verb')&&!ex.length){ errs.push(r.n+' ('+de+'): brak przykładu w zdaniu'); return; }
+    if(seen[de.toLowerCase()]){ dups++; return; }
+    seen[de.toLowerCase()]=1;
+    cards.push({id:'c'+(base+i).toString(36)+Math.random().toString(36).slice(2,5),type:type,de:de,pl:pl,info:String(r.info||'').replace(/\\n/g,'\n'),ex:ex,cat:String(r.cat||'Import').trim()||'Import',tense:String(r.tense||''),custom:true,added:base+i});
   });
+  return {cards:cards,errs:errs,dups:dups};
+}
+function importCards(ev){
+  ev.preventDefault();
+  var res=parseImport($('#imp').value), msg=$('#impMsg');
+  if(res.cards.length){
+    state.custom=res.cards.concat(state.custom);
+    save();
+    $('#imp').value='';
+    if(!current&&!freeMode) advance();
+    renderAll(true);
+  }
+  var parts=[];
+  if(res.cards.length) parts.push('Dodano '+res.cards.length+' kart.');
+  if(res.dups) parts.push('Pominięto '+res.dups+' powtórzeń.');
+  if(res.errs.length) parts.push('Błędy ('+res.errs.length+'): '+res.errs.slice(0,4).join('; ')+(res.errs.length>4?'…':''));
+  if(!parts.length) parts.push('Nic nie dodano.');
+  say(msg,parts.join(' '),!res.cards.length||res.errs.length>0);
 }
 
-// ============================================================
-//  LIST
-// ============================================================
-function setListTab(t,btn){listTab=t;document.querySelectorAll('.list-tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderList()}
+/* ---------- lista ---------- */
+var listFilter='custom', pendingDel=null;
+function isHard(c){ var p=state.progress[c.id]; return !!p&&p.fails>0; }
+function filteredList(){
+  var q=$('#q').value.trim().toLowerCase(), ty=$('#typeSel').value, cards;
+  if(listFilter==='custom') cards=state.custom.slice();
+  else if(listFilter==='hard') cards=allCards().filter(isHard);
+  else cards=allCards();
+  if(ty) cards=cards.filter(function(c){return c.type===ty});
+  if(q) cards=cards.filter(function(c){return (c.de+' '+c.pl+' '+c.cat).toLowerCase().indexOf(q)>=0});
+  return cards;
+}
+function statusText(c){
+  var p=state.progress[c.id];
+  if(!p) return 'nowa';
+  if(p.st==='r') return p.ivl+' dn.';
+  return 'w nauce';
+}
 function renderList(){
-  const q=document.getElementById('listSearch').value.toLowerCase();
-  let items=deck();
-  if(listTab==='unk')items=items.filter(c=>saved.includes(c.de));
-  else if(listTab==='know')items=items.filter(c=>known.includes(c.de));
-  else if(listTab==='new')items=items.filter(c=>!saved.includes(c.de)&&!known.includes(c.de));
-  else if(listTab==='custom')items=items.filter(c=>custom.some(x=>x[1]===c.de));
-  if(q)items=items.filter(c=>(c.de+c.pl+c.ex).toLowerCase().includes(q));
-  const box=document.getElementById('listBox');
-  if(!items.length){box.innerHTML='<div class="empty-card" style="min-height:80px">Brak wyników</div>';return}
-  box.innerHTML=items.map(c=>{
-    const st=saved.includes(c.de)?'unknown':known.includes(c.de)?'known':'new';
-    return `<div class="list-item">
-      <div class="li-status ${st}"></div>
-      <div class="li-text">
-        <div class="li-de">${c.de}</div>
-        <div class="li-pl">${c.pl}</div>
-        ${c.ex?'<div class="li-ex">'+c.ex+'</div>':''}
-        <span class="li-cat">${c.cat}</span>${c.note?' <span class="li-cat">'+c.note+'</span>':''}
-      </div>
-      <div class="li-actions">
-        <button onclick="toggleSaved('${c.de.replace(/'/g,"\\'")}')">${saved.includes(c.de)?'✅':'📌'}</button>
-        ${custom.some(x=>x[1]===c.de)?'<button onclick="delCustom(\''+c.de.replace(/'/g,"\\'")+'\')">🗑</button>':''}
-      </div>
-    </div>`}).join('');
+  $('#chCustom').textContent='Moje ('+state.custom.length+')';
+  $('#chHard').textContent='Trudne ('+allCards().filter(isHard).length+')';
+  $('#chAll').textContent='Wszystkie ('+allCards().length+')';
+  $$('.chip').forEach(function(b){ b.setAttribute('aria-pressed',b.getAttribute('data-f')===listFilter?'true':'false'); });
+  var ul=$('#rows'); ul.textContent='';
+  var cards=filteredList(), empty=$('#listEmpty');
+  empty.hidden=cards.length>0;
+  if(!cards.length){
+    $('#listEmptyText').textContent=$('#q').value.trim()?'Nic nie pasuje do tego wyszukiwania.':
+      (listFilter==='custom'?'Nie dodałeś jeszcze własnych kart. Przejdź do zakładki Dodaj.':
+      (listFilter==='hard'?'Żadna karta nie została jeszcze oceniona jako „Jeszcze raz”.':'Brak kart.'));
+  }
+  cards.forEach(function(c){
+    var li=document.createElement('li'); li.className='row';
+    var main=document.createElement('div'); main.className='main';
+    var de=document.createElement('div'); de.className='rde';
+    if(c.type==='sentence'){ de.textContent=c.de; de.lang='de'; } else { setDe(de,c.de); de.lang='de'; }
+    var pl=document.createElement('div'); pl.className='rpl'; pl.textContent=c.type==='sentence'?c.pl:c.pl;
+    var meta=document.createElement('div'); meta.className='meta';
+    [TYPE_LABEL[c.type],c.cat,statusText(c)].forEach(function(t){ var s=document.createElement('span'); s.textContent=t; meta.appendChild(s); });
+    main.appendChild(de); main.appendChild(pl); main.appendChild(meta);
+    li.appendChild(main);
+    if(c.custom){
+      var b=document.createElement('button'); b.type='button'; b.setAttribute('data-del',c.id);
+      var sure=pendingDel===c.id;
+      b.className='btn del '+(sure?'warn':'ghost'); b.textContent=sure?'Na pewno?':'Usuń';
+      li.appendChild(b);
+    }
+    ul.appendChild(li);
+  });
 }
-function toggleSaved(de){
-  if(saved.includes(de)){saved=saved.filter(x=>x!==de);if(!known.includes(de))known.push(de)}
-  else{known=known.filter(x=>x!==de);if(!saved.includes(de))saved.push(de)}
-  save();renderList();updateStats();
-}
-function delCustom(de){
-  if(!confirm('Usunąć fiszkę?'))return;
-  custom=custom.filter(x=>x[1]!==de);saved=saved.filter(x=>x!==de);known=known.filter(x=>x!==de);
-  save();renderList();rebuild();
-}
-
-// ============================================================
-//  ADD
-// ============================================================
-function addCard(){
-  const g=id=>document.getElementById(id).value.trim();
-  if(!g('addDe')||!g('addPl')){alert('Podaj przynajmniej DE i PL');return}
-  custom.push([g('addCat'),g('addDe'),g('addPl'),g('addEx'),g('addExPl'),g('addNote')]);
-  if(!saved.includes(g('addDe')))saved.push(g('addDe'));
-  save();
-  ['addDe','addPl','addEx','addExPl','addNote'].forEach(id=>document.getElementById(id).value='');
-  alert('✅ Dodano fiszkę!');
-  rebuild();
+function deleteCard(id){
+  state.custom=state.custom.filter(function(c){return c.id!==id});
+  delete state.progress[id];
+  freeQueue=freeQueue.filter(function(x){return x!==id});
+  pendingDel=null; save();
+  if(current&&current.id===id) advance();
+  renderAll(true);
 }
 
-// ============================================================
-//  EXPORT
-// ============================================================
-function doExport(type){
-  const q=s=>'"'+String(s||'').replace(/"/g,'""')+'"';
-  let items=deck();
-  if(type==='unk')items=items.filter(c=>saved.includes(c.de));
-  else if(type==='know')items=items.filter(c=>known.includes(c.de));
-  else if(type==='custom')items=items.filter(c=>custom.some(x=>x[1]===c.de));
-  if(!items.length){alert('Brak kart do eksportu');return}
-  const csv=items.map(c=>[c.de,c.pl,c.ex,c.exPl,c.note,c.cat].map(q).join(',')).join('\n');
-  const bom='\uFEFF';
-  const blob=new Blob([bom+csv],{type:'text/csv;charset=utf-8'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download='fiszki_'+type+'.csv';a.click();
+/* ---------- eksport ---------- */
+function esc(v){ return '"'+String(v).replace(/"/g,'""')+'"'; }
+function h(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function slug(s){ return String(s).trim().replace(/[\s,;:]+/g,'_'); }
+function exportSet(){
+  var v=(document.querySelector('input[name="set"]:checked')||{}).value;
+  if(v==='hard') return allCards().filter(isHard);
+  if(v==='all') return allCards();
+  return state.custom.slice();
+}
+function exportFmt(){ return (document.querySelector('input[name="fmt"]:checked')||{}).value||'anki'; }
+function ankiFront(c){
+  if(c.type==='sentence') return h(c.pl)+(c.tense?'<br><small>czas: '+h(c.tense)+'</small>':'');
+  return h(c.de);
+}
+function ankiBack(c){
+  if(c.type==='sentence') return h(c.de)+(c.info?'<br><br><i>'+h(c.info).replace(/\n/g,'<br>')+'</i>':'');
+  var s=h(c.pl);
+  if(c.info) s+='<br><i>'+h(c.info).replace(/\n/g,'<br>')+'</i>';
+  c.ex.forEach(function(e){ s+='<br><br>'+(e.l?'<b>'+h(e.l)+':</b> ':'')+h(e.de)+(e.pl?'<br>'+h(e.pl):''); });
+  return s;
+}
+function toCsv(cards){
+  var fm=exportFmt(), rows=[];
+  if(fm==='anki'){
+    var out='#separator:comma\r\n#html:true\r\n#tags column:3\r\n';
+    cards.forEach(function(c){ out+=[esc(ankiFront(c)),esc(ankiBack(c)),esc([slug(c.type),slug(c.cat)].join(' '))].join(',')+'\r\n'; });
+    return out;
+  }
+  var head=['rodzaj','niemiecki','polski','formy_lub_uwagi','czas_zdania','kategoria','trudne'];
+  for(var i=1;i<=3;i++){ head.push('przyklad'+i+'_czas','przyklad'+i+'_niemiecki','przyklad'+i+'_polski'); }
+  rows.push(head);
+  cards.forEach(function(c){
+    var r=[TYPE_LABEL[c.type],c.de,c.pl,c.info||'',c.tense||'',c.cat||'',isHard(c)?'tak':'nie'];
+    for(var i=0;i<3;i++){ var e=c.ex[i]; r.push(e?e.l:'',e?e.de:'',e?e.pl:''); }
+    rows.push(r);
+  });
+  return rows.map(function(r){return r.map(esc).join(',')}).join('\r\n')+'\r\n';
+}
+function renderExport(){
+  $('#nCustom').textContent=state.custom.length;
+  $('#nHard').textContent=allCards().filter(isHard).length;
+  $('#nAllExp').textContent=allCards().length;
+  var cards=exportSet();
+  $('#csvOut').value=cards.length?toCsv(cards):'';
+  $('#csvOut').placeholder='Brak kart w tym zestawie. Wybierz inny albo dodaj karty.';
+  $('#fmtHint').textContent=exportFmt()==='anki'
+    ?'W Anki: Plik, Importuj, wybierz ten plik. Typ notatki „Podstawowy”: kolumna 1 to przód, 2 to tył, 3 to tagi. Zaznacz zezwolenie na HTML.'
+    :'Kolumny: rodzaj, niemiecki, polski, formy lub uwagi, czas zdania, kategoria, trudne i do trzech przykładów. Plik w UTF-8.';
+  $('#dl').hidden=!downloadsNS;
+  $('#dl').disabled=!cards.length; $('#copy').disabled=!cards.length;
+}
+function download(){
+  var cards=exportSet(), msg=$('#expMsg');
+  if(!cards.length||!downloadsNS) return;
+  var d=new Date();
+  var name='fiszki-niemiecki-'+(exportFmt()==='anki'?'anki-':'')+d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'.csv';
+  downloadsNS.save({filename:name,data:'﻿'+toCsv(cards)}).then(function(r){
+    say(msg,r&&r.status==='delivered'?'Plik wysłany.':'Plik zapisany: '+cards.length+' kart.',false);
+  }).catch(function(e){
+    if(e&&e.code==='declined') return say(msg,'',false);
+    say(msg,'Nie udało się pobrać pliku. Użyj przycisku Kopiuj i wklej tekst do pliku .csv.',true);
+  });
+}
+function copyCsv(){
+  var cards=exportSet(), msg=$('#expMsg'), out=$('#csvOut');
+  if(!cards.length) return;
+  var fallback=function(){ out.focus(); out.select(); say(msg,'Tekst jest zaznaczony. Skopiuj go ręcznie.',true); };
+  try{ navigator.clipboard.writeText(toCsv(cards)).then(function(){ say(msg,'Skopiowano '+cards.length+' kart.',false); }).catch(fallback); }
+  catch(e){ fallback(); }
 }
 
-// ============================================================
-//  NAV
-// ============================================================
-function showPage(id,btn){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  if(id==='pageList')renderList();
+/* ---------- widoki ---------- */
+function showTab(name){
+  $$('.tab').forEach(function(t){ t.setAttribute('aria-selected',t.getAttribute('data-tab')===name?'true':'false'); });
+  ['study','add','list','export'].forEach(function(n){ $('#v-'+n).hidden=(n!==name); });
+  if(name==='list') renderList();
+  if(name==='export') renderExport();
+  if(name==='study'){ if(!current&&!freeMode) advance(); renderStudy(); }
+}
+function renderAll(keep){
+  renderDecks(); renderStats();
+  if(!keep||(!current&&!freeMode)) advance();
+  renderStudy(); renderList(); renderExport();
 }
 
-// init
-checkStreak();rebuild();
+/* ---------- start ---------- */
+var local=loadLocal(); if(local) state=local;
+advance(); renderAll(true); setStatus('load'); updateForm();
+
+$$('.tab').forEach(function(t){ t.addEventListener('click',function(){ showTab(t.getAttribute('data-tab')); }); });
+$('#reveal').addEventListener('click',reveal);
+$$('.rate').forEach(function(b){ b.addEventListener('click',function(){ rate(+b.getAttribute('data-r')); }); });
+$('#deckSel').addEventListener('change',function(e){ deckSel=e.target.value; freeMode=false; advance(); renderStudy(); });
+$('#newSel').addEventListener('change',function(e){ state.settings.newPerDay=+e.target.value; save(); if(!freeMode&&!current) advance(); renderStats(); renderStudy(); });
+$('#moreNew').addEventListener('click',function(){ state.newDay={d:todayKey(),n:Math.max(0,newUsed()-10)}; save(); advance(); renderStats(); renderStudy(); });
+$('#freeBtn').addEventListener('click',function(){
+  freeQueue=shuffle(allCards().filter(inDeck).map(function(c){return c.id}));
+  freeMode=true; advance(); renderStudy();
+});
+$('#exitFreeBtn').addEventListener('click',function(){ freeMode=false; advance(); renderStudy(); });
+$('#speak').addEventListener('click',function(){
+  try{
+    if(!current) return;
+    window.speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(current.de); u.lang='de-DE'; u.rate=.9;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+});
+document.addEventListener('keydown',function(e){
+  if(e.ctrlKey||e.metaKey||e.altKey) return;
+  var t=e.target; if(t&&/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+  if($('#v-study').hidden||!current) return;
+  if(!revealed&&(e.key===' '||e.key==='Enter')){ e.preventDefault(); reveal(); }
+  else if(revealed&&e.key.length===1&&'1234'.indexOf(e.key)>=0){ rate(+e.key); }
+  else if(revealed&&(e.key===' '||e.key==='Enter')){ e.preventDefault(); rate(3); }
+});
+$('#f-type').addEventListener('change',updateForm);
+$('#addForm').addEventListener('submit',addCard);
+$('#impForm').addEventListener('submit',importCards);
+$('#q').addEventListener('input',renderList);
+$('#typeSel').addEventListener('change',renderList);
+$$('.chip').forEach(function(b){ b.addEventListener('click',function(){ listFilter=b.getAttribute('data-f'); pendingDel=null; renderList(); }); });
+$('#rows').addEventListener('click',function(e){
+  var b=e.target.closest('[data-del]'); if(!b) return;
+  var id=b.getAttribute('data-del');
+  if(pendingDel===id) deleteCard(id); else { pendingDel=id; renderList(); }
+});
+$$('input[name="set"],input[name="fmt"]').forEach(function(r){ r.addEventListener('change',function(){ say($('#expMsg'),'',false); renderExport(); }); });
+$('#dl').addEventListener('click',download);
+$('#copy').addEventListener('click',copyCsv);
+
+/* ---------- zapis na koncie (db) ---------- */
+function cuse(name){
+  try{ if(window.claude&&window.claude.use) return window.claude.use(name).catch(function(){return null}); }catch(e){}
+  return Promise.resolve(null);
+}
+cuse('downloads').then(function(d){ downloadsNS=d; renderExport(); });
+Promise.all([cuse('user'),cuse('db')]).then(function(r){
+  var user=r[0], db=r[1];
+  if(!user||!db){ setStatus('local'); return null; }
+  return user.id().then(function(id){
+    if(!id){ setStatus('local'); return; }
+    dbDoc=db.doc('data/users/'+id+'/state');
+    loadTimer=setTimeout(function(){ if(!cloudOk) setStatus('slow'); },10000);
+    dbDoc.onSnapshot(function(snap){
+      if(snap.metadata&&snap.metadata.hasPendingWrites) return;
+      clearTimeout(loadTimer);
+      var confirmed=!snap.metadata||!snap.metadata.fromCache;
+      if(snap.exists){
+        var remote=normalize(snap.data());
+        if(remote.updated>state.updated){ state=remote; saveLocal(); advance(); renderAll(true); }
+        else if(state.updated>remote.updated){ flush(); }
+        if(confirmed){ cloudOk=true; if(!writing) setStatus('cloud'); }
+      } else if(confirmed){
+        if(state.custom.length||Object.keys(state.progress).length){ state.updated=state.updated||Date.now(); flush(); }
+        else { cloudOk=true; setStatus('cloud'); }
+      }
+    },function(){ setStatus('fail'); });
+  });
+});
+})();
 </script>
-</body>
-</html>
+
+</body></html>
