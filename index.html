@@ -378,7 +378,7 @@ const BASE=[
 // ============================================================
 //  STAN APLIKACJI
 // ============================================================
-const LS=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){}return d};
+const LS=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v===null||v===undefined?d:v}catch(e){return d}};
 let saved  = LS('de_saved',[]);
 let known  = LS('de_known',[]);
 let custom = LS('de_custom',[]);
