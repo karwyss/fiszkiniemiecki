@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>🇩🇪 Deutsch Fiszki</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--accent:#4361ee;--accent2:#3a0ca3;
+  --green:#06d6a0;--red:#ef476f;--yellow:#ffd166;--text:#e8e8e8;--text2:#a0a0b8;
+  --radius:18px;--shadow:0 8px 32px rgba(0,0,0,.45)
+}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
+.app{max-width:480px;margin:auto;padding:12px 14px 100px}
+
+/* header */
+.header{display:flex;align-items:center;justify-content:space-between;padding:10px 0 6px}
+.logo{font-size:22px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.streak{font-size:13px;color:var(--yellow);display:flex;align-items:center;gap:4px}
+
+/* stats bar */
+.stats{display:flex;gap:6px;margin:8px 0 12px}
+.stat{flex:1;background:var(--card);border-radius:12px;padding:10px 8px;text-align:center}
+.stat .num{font-size:22px;font-weight:800}
+.stat .lab{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.stat.s-new .num{color:var(--accent)}
+.stat.s-know .num{color:var(--green)}
+.stat.s-unk .num{color:var(--red)}
+.stat.s-tot .num{color:var(--yellow)}
+
+/* progress */
+.progress{height:4px;background:#222;border-radius:4px;margin-bottom:14px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:4px;transition:width .4s}
+
+/* filters */
+.filters{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.filters select,.filters button{background:var(--card);color:var(--text);border:1px solid #333;border-radius:10px;padding:8px 12px;font-size:13px;cursor:pointer;flex:1;min-width:0}
+.filters button:active{background:var(--accent)}
+
+/* card */
+.card-wrap{perspective:1200px;margin-bottom:12px}
+.card{position:relative;min-height:280px;border-radius:var(--radius);cursor:pointer;transform-style:preserve-3d;transition:transform .5s;-webkit-tap-highlight-color:transparent}
+.card.flipped{transform:rotateY(180deg)}
+.card-face{position:absolute;inset:0;border-radius:var(--radius);padding:24px 20px;display:flex;flex-direction:column;backface-visibility:hidden;overflow-y:auto}
+.card-front{background:linear-gradient(145deg,var(--card),var(--card2));box-shadow:var(--shadow)}
+.card-back{background:linear-gradient(145deg,#1b2a4a,var(--card));box-shadow:var(--shadow);transform:rotateY(180deg)}
+.card-cat{display:inline-block;font-size:10px;text-transform:uppercase;letter-spacing:1px;background:var(--accent);color:#fff;padding:3px 10px;border-radius:20px;align-self:flex-start;margin-bottom:12px}
+.card-de{font-size:26px;font-weight:800;line-height:1.3;margin-bottom:10px}
+.card-ex{font-size:16px;color:var(--text2);font-style:italic;line-height:1.5;margin-bottom:6px}
+.card-pl{font-size:24px;font-weight:700;color:var(--green);margin-bottom:10px;line-height:1.3}
+.card-expl{font-size:15px;color:var(--text2);line-height:1.5}
+.card-note{font-size:13px;color:var(--yellow);margin-top:8px;padding-top:8px;border-top:1px solid #333}
+.card-saved{position:absolute;top:14px;right:14px;font-size:18px}
+.card-hint{color:#555;font-size:13px;margin-top:auto;padding-top:14px;text-align:center}
+.card-num{position:absolute;bottom:10px;right:16px;font-size:11px;color:#444}
+.empty-card{display:flex;align-items:center;justify-content:center;min-height:280px;background:var(--card);border-radius:var(--radius);text-align:center;color:var(--text2);font-size:16px;padding:30px}
+
+/* buttons */
+.actions{display:flex;gap:8px;margin-bottom:8px}
+.actions button{flex:1;border:none;border-radius:14px;padding:16px 8px;font-size:15px;font-weight:700;cursor:pointer;transition:transform .1s,box-shadow .2s}
+.actions button:active{transform:scale(.95)}
+.btn-no{background:linear-gradient(135deg,#ef476f,#c1255a);color:#fff}
+.btn-hard{background:linear-gradient(135deg,#ff9f1c,#e07b00);color:#fff}
+.btn-ok{background:linear-gradient(135deg,#06d6a0,#049a6e);color:#fff}
+.btn-easy{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.nav{display:flex;gap:8px;margin-bottom:16px}
+.nav button{flex:1;background:var(--card);color:var(--text);border:1px solid #333;border-radius:12px;padding:12px;font-size:14px;cursor:pointer}
+.nav button:active{background:#333}
+
+/* bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid #222;display:flex;z-index:100}
+.bottom-nav button{flex:1;background:none;border:none;color:var(--text2);padding:10px 4px 8px;font-size:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s}
+.bottom-nav button.active{color:var(--accent)}
+.bottom-nav button .ico{font-size:20px}
+
+/* pages */
+.page{display:none}.page.active{display:block}
+
+/* list page */
+.list-header{display:flex;gap:8px;margin-bottom:12px}
+.list-header input{flex:1;background:var(--card);color:var(--text);border:1px solid #333;border-radius:10px;padding:10px 14px;font-size:14px}
+.list-header input::placeholder{color:#555}
+.list-tabs{display:flex;gap:4px;margin-bottom:12px}
+.list-tabs button{flex:1;background:var(--card);color:var(--text2);border:1px solid #333;border-radius:10px;padding:8px;font-size:12px;cursor:pointer}
+.list-tabs button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.list-item{background:var(--card);border-radius:12px;padding:12px 14px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.li-text{flex:1;min-width:0}
+.li-de{font-size:15px;font-weight:700}
+.li-pl{font-size:13px;color:var(--text2);margin-top:2px}
+.li-ex{font-size:12px;color:#666;font-style:italic;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li-cat{font-size:9px;background:#333;color:var(--text2);padding:2px 6px;border-radius:6px;margin-top:4px;display:inline-block}
+.li-actions{display:flex;flex-direction:column;gap:4px}
+.li-actions button{background:#222;border:1px solid #333;color:var(--text);border-radius:8px;padding:4px 8px;font-size:12px;cursor:pointer;white-space:nowrap}
+.li-actions button:active{background:#444}
+.li-status{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0}
+.li-status.unknown{background:var(--red)}.li-status.known{background:var(--green)}.li-status.new{background:#555}
+
+/* add page */
+.form-group{margin-bottom:12px}
+.form-group label{font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;display:block}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--card);color:var(--text);border:1px solid #333;border-radius:10px;padding:12px 14px;font-size:15px;font-family:inherit}
+.form-group textarea{min-height:70px;resize:vertical}
+.btn-add{width:100%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;cursor:pointer}
+.btn-add:active{transform:scale(.97)}
+
+/* export page */
+.export-btn{width:100%;background:var(--card);color:var(--text);border:1px solid #333;border-radius:14px;padding:16px;font-size:15px;cursor:pointer;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.export-btn:active{background:#333}
+.export-btn .ico{font-size:24px}
+.export-info{font-size:12px;color:var(--text2);margin-top:12px;line-height:1.6}
+
+/* swipe hint */
+.swipe-hint{text-align:center;color:#444;font-size:12px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="app">
+<!-- ===== STUDY PAGE ===== -->
+<div class="page active" id="pageStudy">
+  <div class="header">
+    <div class="logo">🇩🇪 Deutsch</div>
+    <div class="streak" id="streakBadge">🔥 0</div>
+  </div>
+  <div class="stats">
+    <div class="stat s-new"><div class="num" id="sNew">0</div><div class="lab">Nowe</div></div>
+    <div class="stat s-know"><div class="num" id="sKnow">0</div><div class="lab">Znam</div></div>
+    <div class="stat s-unk"><div class="num" id="sUnk">0</div><div class="lab">Uczę się</div></div>
+    <div class="stat s-tot"><div class="num" id="sTot">0</div><div class="lab">Łącznie</div></div>
+  </div>
+  <div class="progress"><div class="progress-fill" id="progFill"></div></div>
+  <div class="filters">
+    <select id="fCat" onchange="rebuild()">
+      <option value="">Wszystkie</option>
+      <option>Czasownik</option><option>Słowo</option><option>Zwrot</option><option>Zdanie</option>
+    </select>
+    <select id="fMode" onchange="rebuild()">
+      <option value="all">Wszystkie</option>
+      <option value="new">Nowe</option>
+      <option value="unk">Uczę się</option>
+      <option value="know">Znam</option>
+    </select>
+    <button onclick="shuffleDeck()">🔀</button>
+  </div>
+  <div class="swipe-hint">← przesuń lub kliknij kartę →</div>
+  <div class="card-wrap" id="cardWrap"></div>
+  <div class="actions">
+    <button class="btn-no" onclick="mark('unk')">❌</button>
+    <button class="btn-hard" onclick="mark('hard')">🤔</button>
+    <button class="btn-ok" onclick="mark('ok')">✅</button>
+    <button class="btn-easy" onclick="mark('easy')">⚡</button>
+  </div>
+  <div class="nav">
+    <button onclick="go(-1)">◀ Poprzednia</button>
+    <button onclick="go(1)">Następna ▶</button>
+  </div>
+</div>
+
+<!-- ===== LIST PAGE ===== -->
+<div class="page" id="pageList">
+  <div class="header"><div class="logo">📋 Moja lista</div></div>
+  <div class="list-header">
+    <input type="text" id="listSearch" placeholder="Szukaj..." oninput="renderList()">
+  </div>
+  <div class="list-tabs">
+    <button class="active" onclick="setListTab('all',this)">Wszystkie</button>
+    <button onclick="setListTab('unk',this)">❌ Uczę się</button>
+    <button onclick="setListTab('know',this)">✅ Znam</button>
+    <button onclick="setListTab('new',this)">🆕 Nowe</button>
+    <button onclick="setListTab('custom',this)">✏️ Moje</button>
+  </div>
+  <div id="listBox"></div>
+</div>
+
+<!-- ===== ADD PAGE ===== -->
+<div class="page" id="pageAdd">
+  <div class="header"><div class="logo">➕ Nowa fiszka</div></div>
+  <div class="form-group"><label>Kategoria</label><select id="addCat"><option>Słowo</option><option>Czasownik</option><option>Zwrot</option><option>Zdanie</option></select></div>
+  <div class="form-group"><label>🇩🇪 Niemiecki</label><input id="addDe" placeholder="np. die Besprechung"></div>
+  <div class="form-group"><label>🇵🇱 Polski</label><input id="addPl" placeholder="np. spotkanie, narada"></div>
+  <div class="form-group"><label>Przykład (DE)</label><textarea id="addEx" placeholder="np. Die Besprechung beginnt um 10 Uhr."></textarea></div>
+  <div class="form-group"><label>Tłumaczenie przykładu</label><textarea id="addExPl" placeholder="Narada zaczyna się o 10."></textarea></div>
+  <div class="form-group"><label>Notatka (formy, czas…)</label><input id="addNote" placeholder="np. die, Pl. -en"></div>
+  <button class="btn-add" onclick="addCard()">Dodaj fiszkę</button>
+</div>
+
+<!-- ===== EXPORT PAGE ===== -->
+<div class="page" id="pageExport">
+  <div class="header"><div class="logo">⬇️ Eksport</div></div>
+  <button class="export-btn" onclick="doExport('unk')"><span class="ico">📌</span><span>Eksport: Uczę się (CSV)</span></button>
+  <button class="export-btn" onclick="doExport('know')"><span class="ico">✅</span><span>Eksport: Znam (CSV)</span></button>
+  <button class="export-btn" onclick="doExport('all')"><span class="ico">📚</span><span>Eksport: Cała talia (CSV)</span></button>
+  <button class="export-btn" onclick="doExport('custom')"><span class="ico">✏️</span><span>Eksport: Moje fiszki (CSV)</span></button>
+  <div class="export-info">
+    <strong>Import do Anki:</strong><br>
+    Plik → Importuj → wybierz CSV.<br>
+    Separator: przecinek. Kodowanie: UTF-8.<br>
+    Kolumny: DE | PL | Przykład DE | Przykład PL | Notatka | Kategoria
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="active" onclick="showPage('pageStudy',this)"><span class="ico">📖</span>Nauka</button>
+  <button onclick="showPage('pageList',this)"><span class="ico">📋</span>Lista</button>
+  <button onclick="showPage('pageAdd',this)"><span class="ico">➕</span>Dodaj</button>
+  <button onclick="showPage('pageExport',this)"><span class="ico">⬇️</span>Eksport</button>
+</div>
+</div>
+
+<script>
+// ============================================================
+//  BAZA FISZEK  (~150)
+// ============================================================
+const BASE=[
+// [kategoria, de, pl, przykładDE, przykładPL, notatka]
+// --- CZASOWNIKI ---
+["Czasownik","gehen","iść, chodzić","Ich gehe heute Abend ins Kino.","Dziś wieczorem idę do kina.","geht–ging–ist gegangen"],
+["Czasownik","kommen","przychodzić","Kommst du morgen zur Party?","Przyjdziesz jutro na imprezę?","kommt–kam–ist gekommen"],
+["Czasownik","machen","robić","Was machst du am Wochenende?","Co robisz w weekend?","macht–machte–hat gemacht"],
+["Czasownik","sehen","widzieć","Hast du den neuen Film gesehen?","Widziałeś nowy film?","sieht–sah–hat gesehen"],
+["Czasownik","essen","jeść","Wir haben gestern Pizza gegessen.","Wczoraj jedliśmy pizzę.","isst–aß–hat gegessen"],
+["Czasownik","trinken","pić","Möchtest du etwas trinken?","Chcesz coś do picia?","trinkt–trank–hat getrunken"],
+["Czasownik","brauchen","potrzebować","Ich brauche noch fünf Minuten.","Potrzebuję jeszcze 5 minut.","braucht–brauchte–hat gebraucht"],
+["Czasownik","wissen","wiedzieć","Ich weiß es leider nicht.","Niestety nie wiem.","weiß–wusste–hat gewusst"],
+["Czasownik","vergessen","zapominać","Ich habe deinen Geburtstag vergessen.","Zapomniałem o twoich urodzinach.","vergisst–vergaß–hat vergessen"],
+["Czasownik","verstehen","rozumieć","Ich verstehe dich nicht, sprich bitte langsamer.","Nie rozumiem cię, mów wolniej.","versteht–verstand–hat verstanden"],
+["Czasownik","warten auf +Akk","czekać na","Ich warte seit zehn Minuten auf den Bus.","Czekam na autobus od 10 min.","wartet–wartete–hat gewartet"],
+["Czasownik","bekommen","dostawać","Hast du meine Nachricht bekommen?","Dostałeś moją wiadomość?","bekommt–bekam–hat bekommen"],
+["Czasownik","anrufen","dzwonić do","Ich rufe dich später an.","Zadzwonię do ciebie później.","rozdzielny: ruft an–rief an–hat angerufen"],
+["Czasownik","mitnehmen","zabierać ze sobą","Soll ich dir etwas vom Supermarkt mitnehmen?","Mam ci coś przynieść ze sklepu?","nimmt mit–nahm mit–hat mitgenommen"],
+["Czasownik","sich treffen","spotykać się","Wir treffen uns um acht vor dem Café.","Spotykamy się o 8 przed kawiarnią.","trifft–traf–hat getroffen"],
+["Czasownik","finden","znajdować; uważać","Ich finde meinen Schlüssel nicht.","Nie mogę znaleźć klucza.","findet–fand–hat gefunden"],
+["Czasownik","bleiben","zostawać","Heute bleibe ich zu Hause.","Dziś zostaję w domu.","bleibt–blieb–ist geblieben"],
+["Czasownik","fahren","jechać","Wir fahren mit dem Zug nach Berlin.","Jedziemy pociągiem do Berlina.","fährt–fuhr–ist gefahren"],
+["Czasownik","helfen +Dat","pomagać","Kannst du mir bitte helfen?","Możesz mi pomóc?","hilft–half–hat geholfen"],
+["Czasownik","sich freuen auf +Akk","cieszyć się na","Ich freue mich auf das Wochenende.","Cieszę się na weekend.","freut sich–freute sich–hat sich gefreut"],
+["Czasownik","sich erinnern an +Akk","przypominać sobie","Erinnerst du dich an ihn?","Pamiętasz go?","erinnert sich–erinnerte sich–hat sich erinnert"],
+["Czasownik","anfangen","zaczynać","Der Film fängt um 20 Uhr an.","Film zaczyna się o 20.","fängt an–fing an–hat angefangen"],
+["Czasownik","aufstehen","wstawać","Ich stehe jeden Tag um sieben auf.","Wstaję codziennie o 7.","steht auf–stand auf–ist aufgestanden"],
+["Czasownik","müssen","musieć","Ich muss morgen früh aufstehen.","Muszę jutro wcześnie wstać.","muss–musste–hat gemusst"],
+["Czasownik","können","móc, umieć","Kannst du Auto fahren?","Umiesz prowadzić samochód?","kann–konnte–hat gekonnt"],
+["Czasownik","wollen","chcieć","Ich wollte dich gerade anrufen!","Właśnie chciałem do ciebie dzwonić!","will–wollte–hat gewollt"],
+["Czasownik","kaufen","kupować","Ich habe ein neues Handy gekauft.","Kupiłem nowy telefon.","kauft–kaufte–hat gekauft"],
+["Czasownik","abholen","odbierać","Kannst du mich vom Bahnhof abholen?","Możesz mnie odebrać z dworca?","holt ab–holte ab–hat abgeholt"],
+["Czasownik","vorbeikommen","wpaść z wizytą","Komm doch am Sonntag vorbei!","Wpadnij w niedzielę!","kommt vorbei–kam vorbei–ist vorbeigekommen"],
+["Czasownik","klappen","udać się","Hat alles geklappt?","Wszystko się udało?","klappt–klappte–hat geklappt"],
+["Czasownik","schlafen","spać","Ich habe letzte Nacht schlecht geschlafen.","Ostatniej nocy źle spałem.","schläft–schlief–hat geschlafen"],
+["Czasownik","laufen","biegać, chodzić","Er läuft jeden Morgen fünf Kilometer.","Biega codziennie rano 5 km.","läuft–lief–ist gelaufen"],
+["Czasownik","sprechen","mówić, rozmawiać","Sprechen Sie Deutsch?","Czy mówi Pan/Pani po niemiecku?","spricht–sprach–hat gesprochen"],
+["Czasownik","lesen","czytać","Ich lese gerade ein spannendes Buch.","Czytam właśnie fascynującą książkę.","liest–las–hat gelesen"],
+["Czasownik","schreiben","pisać","Schreib mir eine Nachricht!","Napisz mi wiadomość!","schreibt–schrieb–hat geschrieben"],
+["Czasownik","nehmen","brać","Ich nehme den Salat, bitte.","Poproszę sałatkę.","nimmt–nahm–hat genommen"],
+["Czasownik","geben","dawać","Gibst du mir bitte das Salz?","Podasz mi sól?","gibt–gab–hat gegeben"],
+["Czasownik","denken","myśleć","Ich denke oft an dich.","Często o tobie myślę.","denkt–dachte–hat gedacht"],
+["Czasownik","bringen","przynosić","Ich bringe dir morgen das Buch.","Przyniosę ci jutro książkę.","bringt–brachte–hat gebracht"],
+["Czasownik","stellen","stawiać","Stell die Flasche auf den Tisch.","Postaw butelkę na stole.","stellt–stellte–hat gestellt"],
+["Czasownik","legen","kłaść","Leg das Handy bitte weg.","Odłóż proszę telefon.","legt–legte–hat gelegt"],
+["Czasownik","sich setzen","siadać","Setz dich bitte hin.","Usiądź proszę.","setzt sich–setzte sich–hat sich gesetzt"],
+["Czasownik","aufhören","przestawać","Hör bitte auf zu reden!","Przestań proszę gadać!","hört auf–hörte auf–hat aufgehört"],
+["Czasownik","sich anziehen","ubierać się","Zieh dich warm an, es ist kalt!","Ubierz się ciepło, jest zimno!","zieht an–zog an–hat angezogen"],
+["Czasownik","einkaufen","robić zakupy","Ich muss noch einkaufen gehen.","Muszę jeszcze iść na zakupy.","kauft ein–kaufte ein–hat eingekauft"],
+["Czasownik","bestellen","zamawiać","Ich möchte bitte bestellen.","Chciałbym zamówić.","bestellt–bestellte–hat bestellt"],
+["Czasownik","bezahlen","płacić","Kann ich mit Karte bezahlen?","Mogę zapłacić kartą?","bezahlt–bezahlte–hat bezahlt"],
+["Czasownik","empfehlen","polecać","Können Sie mir etwas empfehlen?","Może mi Pan coś polecić?","empfiehlt–empfahl–hat empfohlen"],
+["Czasownik","umziehen","przeprowadzać się","Wir ziehen nächsten Monat um.","Przeprowadzamy się w przyszłym miesiącu.","zieht um–zog um–ist umgezogen"],
+["Czasownik","sich entscheiden","decydować się","Ich kann mich nicht entscheiden.","Nie mogę się zdecydować.","entscheidet–entschied–hat entschieden"],
+["Czasownik","versprechen","obiecywać","Ich verspreche dir, pünktlich zu sein.","Obiecuję ci, że będę punktualny.","verspricht–versprach–hat versprochen"],
+["Czasownik","sich beschweren","skarżyć się","Er beschwert sich immer über das Wetter.","On zawsze narzeka na pogodę.","beschwert sich–beschwerte sich–hat sich beschwert"],
+
+// --- SŁOWA ---
+["Słowo","die Verspätung","spóźnienie, opóźnienie","Der Zug hat zehn Minuten Verspätung.","Pociąg ma 10 minut opóźnienia.","die, Pl. -en"],
+["Słowo","der Termin","termin, wizyta","Ich habe um drei einen Termin beim Arzt.","O 3 mam wizytę u lekarza.","der, Pl. -e"],
+["Słowo","die Rechnung","rachunek","Die Rechnung, bitte!","Poproszę rachunek!","die, Pl. -en"],
+["Słowo","der Feierabend","koniec dnia pracy","Ich mache jetzt Feierabend.","Kończę teraz pracę.","der"],
+["Słowo","anstrengend","męczący","Die Arbeit war heute sehr anstrengend.","Praca była dziś bardzo męcząca.","przymiotnik"],
+["Słowo","eigentlich","właściwie","Eigentlich wollte ich zu Hause bleiben.","Właściwie chciałem zostać w domu.","partykuła"],
+["Słowo","trotzdem","mimo to","Es regnet, trotzdem gehen wir spazieren.","Pada, mimo to idziemy na spacer.","po trotzdem: V na 1. miejscu"],
+["Słowo","übrigens","a propos, przy okazji","Übrigens, hast du Max gesehen?","A propos, widziałeś Maxa?","przysłówek"],
+["Słowo","sowieso","i tak","Ich muss sowieso einkaufen gehen.","I tak muszę iść na zakupy.","przysłówek"],
+["Słowo","ziemlich","dość, całkiem","Es ist heute ziemlich kalt.","Jest dziś dość zimno.","przysłówek"],
+["Słowo","gleich","zaraz","Ich bin gleich da.","Zaraz będę.","przysłówek"],
+["Słowo","bestimmt","na pewno","Das klappt bestimmt.","To na pewno się uda.","przysłówek"],
+["Słowo","der Einkauf","zakup(y)","Hilfst du mir mit dem Einkauf?","Pomożesz mi z zakupami?","der, Pl. Einkäufe"],
+["Słowo","die Haltestelle","przystanek","Wo ist die nächste Haltestelle?","Gdzie jest najbliższy przystanek?","die, Pl. -n"],
+["Słowo","der Schlüssel","klucz","Wo ist mein Schlüssel?","Gdzie jest mój klucz?","der, Pl. –"],
+["Słowo","neulich","niedawno","Neulich habe ich Anna in der Stadt getroffen.","Niedawno spotkałem Annę w mieście.","przysłówek"],
+["Słowo","leider","niestety","Leider habe ich keine Zeit.","Niestety nie mam czasu.","przysłówek"],
+["Słowo","günstig","tani, korzystny cenowo","Das Restaurant ist günstig und gut.","Restauracja jest tania i dobra.","przymiotnik"],
+["Słowo","lecker","smaczny","Die Suppe ist richtig lecker.","Zupa jest naprawdę smaczna.","przymiotnik"],
+["Słowo","müde","zmęczony","Ich bin heute total müde.","Jestem dziś totalnie zmęczony.","przymiotnik"],
+["Słowo","die Verabredung","umówione spotkanie","Ich habe heute Abend eine Verabredung.","Mam dziś wieczorem spotkanie.","die, Pl. -en"],
+["Słowo","der Kollege / die Kollegin","kolega/koleżanka z pracy","Meine Kollegin hat mir geholfen.","Moja koleżanka mi pomogła.","der/die"],
+["Słowo","die Nachricht","wiadomość","Ich habe dir eine Nachricht geschickt.","Wysłałem ci wiadomość.","die, Pl. -en"],
+["Słowo","die Tüte","torba, reklamówka","Brauchen Sie eine Tüte?","Potrzebuje Pan torbę?","die, Pl. -n"],
+["Słowo","ausverkauft","wyprzedany","Die Karten sind leider ausverkauft.","Bilety są niestety wyprzedane.","przymiotnik"],
+["Słowo","der Vorschlag","propozycja","Das ist ein guter Vorschlag.","To dobra propozycja.","der, Pl. Vorschläge"],
+["Słowo","die Wohnung","mieszkanie","Meine Wohnung hat drei Zimmer.","Moje mieszkanie ma 3 pokoje.","die, Pl. -en"],
+["Słowo","die Erfahrung","doświadczenie","Hast du Erfahrung mit Computern?","Masz doświadczenie z komputerami?","die, Pl. -en"],
+["Słowo","die Auskunft","informacja","Können Sie mir eine Auskunft geben?","Czy może mi Pan udzielić informacji?","die, Pl. Auskünfte"],
+["Słowo","der Stau","korek (drogowy)","Wir stehen seit einer Stunde im Stau.","Stoimy w korku od godziny.","der, Pl. -s"],
+["Słowo","die Ermäßigung","zniżka","Gibt es eine Ermäßigung für Studenten?","Czy jest zniżka dla studentów?","die, Pl. -en"],
+["Słowo","das Angebot","oferta, promocja","Das Angebot gilt nur bis Freitag.","Oferta ważna jest tylko do piątku.","das, Pl. -e"],
+["Słowo","unbedingt","koniecznie","Du musst unbedingt diesen Film sehen!","Musisz koniecznie zobaczyć ten film!","przysłówek"],
+["Słowo","wahrscheinlich","prawdopodobnie","Er kommt wahrscheinlich später.","On prawdopodobnie przyjdzie później.","przysłówek"],
+["Słowo","normalerweise","zwykle","Normalerweise stehe ich um sieben auf.","Zwykle wstaję o siódmej.","przysłówek"],
+["Słowo","ungefähr","mniej więcej, około","Das dauert ungefähr zwei Stunden.","To trwa mniej więcej 2 godziny.","przysłówek"],
+["Słowo","die Quittung","paragon","Kann ich bitte eine Quittung haben?","Mogę prosić o paragon?","die, Pl. -en"],
+["Słowo","das Trinkgeld","napiwek","Geben wir dem Kellner ein Trinkgeld?","Damy kelnerowi napiwek?","das, Pl. -er"],
+["Słowo","der Umweg","objazd, droga okólna","Wir müssen leider einen Umweg fahren.","Musimy niestety jechać objazdem.","der, Pl. -e"],
+["Słowo","gemütlich","przytulny","Deine Wohnung ist sehr gemütlich.","Twoje mieszkanie jest bardzo przytulne.","przymiotnik"],
+["Słowo","schrecklich","straszny, okropny","Das Wetter ist heute schrecklich.","Pogoda jest dziś okropna.","przymiotnik"],
+
+// --- ZWROTY ---
+["Zwrot","Na, wie geht's?","No, jak leci?","Na, wie geht's? – Gut, und dir?","No, jak leci? – Dobrze, a tobie?","potocznie"],
+["Zwrot","Kein Problem.","Nie ma problemu.","Kannst du mir helfen? – Kein Problem.","Możesz mi pomóc? – Nie ma sprawy.",""],
+["Zwrot","Keine Ahnung.","Nie mam pojęcia.","Wo ist Tom? – Keine Ahnung.","Gdzie jest Tom? – Nie mam pojęcia.","potocznie"],
+["Zwrot","Ich habe keine Lust.","Nie mam ochoty.","Ich habe heute keine Lust zu kochen.","Nie mam dziś ochoty gotować.","keine Lust haben auf/zu"],
+["Zwrot","Das kommt darauf an.","To zależy.","Kommst du mit? – Das kommt darauf an.","Idziesz? – To zależy.",""],
+["Zwrot","Stimmt so.","Reszty nie trzeba.","Das macht 12 Euro. – Stimmt so!","To 12 euro. – Reszty nie trzeba!","napiwek"],
+["Zwrot","Alles klar.","Jasne, w porządku.","Wir treffen uns um acht. – Alles klar.","Spotykamy się o 8. – Jasne.",""],
+["Zwrot","Mach dir keine Sorgen.","Nie martw się.","Mach dir keine Sorgen, das schaffen wir.","Nie martw się, damy radę.","Imperativ"],
+["Zwrot","Ich bin dabei.","Wchodzę w to.","Wir gehen essen. – Ich bin dabei!","Idziemy na kolację. – Wchodzę w to!",""],
+["Zwrot","Wie bitte?","Słucham?","Wie bitte? Ich habe dich nicht gehört.","Słucham? Nie usłyszałem cię.",""],
+["Zwrot","Ich drücke dir die Daumen.","Trzymam kciuki.","Morgen ist deine Prüfung – ich drücke dir die Daumen!","Jutro twój egzamin – trzymam kciuki!",""],
+["Zwrot","Was ist los?","Co się dzieje?","Du siehst traurig aus. Was ist los?","Wyglądasz na smutnego. Co jest?",""],
+["Zwrot","Das ist mir egal.","Wszystko mi jedno.","Pizza oder Pasta? – Das ist mir egal.","Pizza czy makaron? – Wszystko jedno.",""],
+["Zwrot","Das macht nichts.","Nic nie szkodzi.","Ich bin zu spät. – Das macht nichts.","Spóźniłem się. – Nic nie szkodzi.",""],
+["Zwrot","Ich muss los.","Muszę lecieć.","Ich muss los, mein Bus kommt gleich.","Muszę lecieć, zaraz autobus.",""],
+["Zwrot","Bis später!","Do później!","Ich gehe jetzt. Bis später!","Idę teraz. Do później!",""],
+["Zwrot","Das passt mir gut.","Pasuje mi.","Treffen wir uns um sechs? – Das passt mir gut.","Spotkajmy się o 6? – Pasuje mi.",""],
+["Zwrot","Wie lange dauert das?","Jak długo to trwa?","Wie lange dauert die Fahrt nach München?","Jak długo trwa podróż do Monachium?",""],
+["Zwrot","Könnten Sie das bitte wiederholen?","Czy mógłby Pan to powtórzyć?","Entschuldigung, könnten Sie das bitte wiederholen?","Przepraszam, mógłby Pan powtórzyć?","Konjunktiv II – grzecznie"],
+["Zwrot","Ich hätte gern …","Poproszę …","Ich hätte gern einen Kaffee und ein Wasser.","Poproszę kawę i wodę.","Konjunktiv II"],
+["Zwrot","Das ist mir peinlich.","Głupio mi / wstydzę się.","Das ist mir total peinlich.","Strasznie mi głupio.",""],
+["Zwrot","Gar nicht schlecht!","Całkiem nieźle!","Wie war der Film? – Gar nicht schlecht!","Jaki był film? – Całkiem niezły!",""],
+["Zwrot","Gute Besserung!","Szybkiego powrotu do zdrowia!","Du bist krank? Gute Besserung!","Jesteś chory? Wyzdrowiej!",""],
+["Zwrot","Herzlichen Glückwunsch!","Serdeczne gratulacje!","Herzlichen Glückwunsch zum Geburtstag!","Wszystkiego najlepszego z okazji urodzin!",""],
+["Zwrot","Es tut mir leid.","Przykro mi / przepraszam.","Es tut mir leid, das wollte ich nicht.","Przepraszam, nie chciałem tego.",""],
+["Zwrot","Ich habe es satt.","Mam tego dość.","Ich habe dieses Wetter satt.","Mam dość tej pogody.","potocznie"],
+["Zwrot","Lass uns gehen!","Chodźmy!","Lass uns ins Café gehen!","Chodźmy do kawiarni!","Imperativ + uns"],
+["Zwrot","Ich komme gleich.","Zaraz przyjdę.","Warte kurz, ich komme gleich.","Poczekaj, zaraz przyjdę.",""],
+["Zwrot","Es lohnt sich.","To się opłaca / warto.","Der Film ist lang, aber es lohnt sich.","Film jest długi, ale warto.","sich lohnen"],
+["Zwrot","Hals- und Beinbruch!","Połamania nóg! (powodzenia)","Morgen ist die Prüfung – Hals- und Beinbruch!","Jutro egzamin – połamania nóg!","idiom"],
+
+// --- ZDANIA w różnych czasach ---
+["Zdanie","Ich arbeite jeden Tag von neun bis fünf.","Pracuję codziennie od 9 do 17.","","","Präsens"],
+["Zdanie","Nächste Woche fahre ich nach Hamburg.","W przyszłym tygodniu jadę do Hamburga.","","","Präsens – przyszłość"],
+["Zdanie","Gestern habe ich lange geschlafen.","Wczoraj długo spałem.","","","Perfekt (haben)"],
+["Zdanie","Am Samstag sind wir ins Kino gegangen.","W sobotę poszliśmy do kina.","","","Perfekt (sein – ruch)"],
+["Zdanie","Als Kind wohnte ich in Krakau.","Jako dziecko mieszkałem w Krakowie.","","","Präteritum"],
+["Zdanie","Es war gestern sehr voll in der Stadt.","Wczoraj było bardzo tłoczno.","","","Präteritum (sein)"],
+["Zdanie","Ich hatte keine Zeit, deshalb habe ich nicht angerufen.","Nie miałem czasu, dlatego nie zadzwoniłem.","","","Prät. + Perfekt"],
+["Zdanie","Morgen werde ich früher aufstehen.","Jutro wstanę wcześniej.","","","Futur I"],
+["Zdanie","Nachdem ich gegessen hatte, bin ich spazieren gegangen.","Po tym jak zjadłem, poszedłem na spacer.","","","Plusquamperfekt"],
+["Zdanie","Ich würde gern mehr reisen.","Chciałbym więcej podróżować.","","","Konjunktiv II"],
+["Zdanie","Wenn ich Zeit hätte, würde ich kommen.","Gdybym miał czas, przyszedłbym.","","","Konj. II – warunek"],
+["Zdanie","Das Paket wurde gestern geliefert.","Paczka została wczoraj dostarczona.","","","Passiv Prät."],
+["Zdanie","Hier darf nicht geraucht werden.","Tutaj nie wolno palić.","","","Passiv + modal"],
+["Zdanie","Warte kurz, ich komme gleich!","Poczekaj, zaraz przyjdę!","","","Imperativ"],
+["Zdanie","Ich bleibe zu Hause, weil ich krank bin.","Zostaję w domu, bo jestem chory.","","","Nebensatz weil"],
+["Zdanie","Ich glaube, dass er recht hat.","Myślę, że on ma rację.","","","Nebensatz dass"],
+["Zdanie","Ich habe vergessen, dich anzurufen.","Zapomniałem do ciebie zadzwonić.","","","zu + Infinitiv"],
+["Zdanie","Hast du Lust, heute Abend essen zu gehen?","Masz ochotę pójść na kolację?","","","zu + Infinitiv"],
+["Zdanie","Ich wollte dich anrufen, aber mein Akku war leer.","Chciałem zadzwonić, ale padła bateria.","","","Prät. modal + aber"],
+["Zdanie","Wenn es morgen regnet, bleiben wir zu Hause.","Jeśli jutro pada, zostajemy w domu.","","","wenn – warunek realny"],
+["Zdanie","Ich habe mich gestern mit Lena getroffen.","Spotkałem się wczoraj z Leną.","","","Perfekt zwrotny"],
+["Zdanie","Seit drei Monaten lerne ich Deutsch.","Od 3 miesięcy uczę się niemieckiego.","","","seit + Präsens"],
+["Zdanie","Bevor ich ins Bett gehe, putze ich mir die Zähne.","Zanim idę spać, myję zęby.","","","bevor + Nebensatz"],
+["Zdanie","Obwohl es geregnet hat, sind wir spazieren gegangen.","Chociaż padało, poszliśmy na spacer.","","","obwohl + Nebensatz"],
+["Zdanie","Je mehr ich lerne, desto besser verstehe ich.","Im więcej się uczę, tym lepiej rozumiem.","","","je…desto"],
+["Zdanie","Ich hätte das nicht machen sollen.","Nie powinienem był tego robić.","","","Konj. II Vergangenheit"],
+["Zdanie","Falls du Hilfe brauchst, ruf mich an.","Gdybyś potrzebował pomocy, zadzwoń.","","","falls + Imperativ"],
+["Zdanie","Er ist der Mann, den ich gestern getroffen habe.","To mężczyzna, którego wczoraj spotkałem.","","","Relativsatz (Akk)"],
+["Zdanie","Das ist die Stadt, in der ich aufgewachsen bin.","To miasto, w którym dorastałem.","","","Relativsatz (Dat)"],
+];
+
+// ============================================================
+//  STAN APLIKACJI
+// ============================================================
+const LS=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){}return d};
+let saved  = LS('de_saved',[]);
+let known  = LS('de_known',[]);
+let custom = LS('de_custom',[]);
+let streak = LS('de_streak',0);
+let lastDay= LS('de_lastDay','');
+let list=[], idx=0, flipped=false, listTab='all';
+
+const save=()=>{localStorage.setItem('de_saved',JSON.stringify(saved));localStorage.setItem('de_known',JSON.stringify(known));localStorage.setItem('de_custom',JSON.stringify(custom));localStorage.setItem('de_streak',JSON.stringify(streak));localStorage.setItem('de_lastDay',JSON.stringify(lastDay))};
+const deck=()=>BASE.concat(custom).map(a=>({cat:a[0],de:a[1],pl:a[2],ex:a[3],exPl:a[4],note:a[5]}));
+const today=()=>new Date().toISOString().slice(0,10);
+
+function checkStreak(){
+  const t=today();
+  if(lastDay!==t){
+    const y=new Date();y.setDate(y.getDate()-1);
+    if(lastDay===y.toISOString().slice(0,10)) streak++;
+    else if(lastDay!==t) streak=1;
+    lastDay=t; save();
+  }
+  document.getElementById('streakBadge').textContent='🔥 '+streak;
+}
+
+// ============================================================
+//  STUDY
+// ============================================================
+function rebuild(){
+  const cat=document.getElementById('fCat').value, mode=document.getElementById('fMode').value;
+  list=deck().filter(c=>{
+    if(cat&&c.cat!==cat)return false;
+    if(mode==='unk')return saved.includes(c.de);
+    if(mode==='know')return known.includes(c.de);
+    if(mode==='new')return !saved.includes(c.de)&&!known.includes(c.de);
+    return true;
+  });
+  idx=0;flipped=false;renderCard();updateStats();
+}
+function shuffleDeck(){for(let i=list.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[list[i],list[j]]=[list[j],list[i]]}idx=0;flipped=false;renderCard()}
+function updateStats(){
+  const d=deck(),t=d.length,k=known.length,u=saved.length,n=t-k-u;
+  document.getElementById('sNew').textContent=n;document.getElementById('sKnow').textContent=k;document.getElementById('sUnk').textContent=u;document.getElementById('sTot').textContent=t;
+  document.getElementById('progFill').style.width=(t?Math.round(k/t*100):0)+'%';
+}
+function renderCard(){
+  const w=document.getElementById('cardWrap');
+  if(!list.length){w.innerHTML='<div class="empty-card">Brak kart w tym filtrze 🎉<br>Zmień filtr lub dodaj fiszki</div>';return}
+  const c=list[idx];
+  const isSaved=saved.includes(c.de);
+  w.innerHTML=`
+    <div class="card${flipped?' flipped':''}" onclick="flipCard()">
+      <div class="card-face card-front">
+        <span class="card-cat">${c.cat}</span>
+        ${isSaved?'<span class="card-saved">📌</span>':''}
+        <div class="card-de">${c.de}</div>
+        ${c.ex?'<div class="card-ex">„'+c.ex+'"</div>':''}
+        <div class="card-hint">Dotknij, aby odwrócić</div>
+        <div class="card-num">${idx+1} / ${list.length}</div>
+      </div>
+      <div class="card-face card-back">
+        <span class="card-cat">${c.cat}</span>
+        <div class="card-de" style="font-size:20px;opacity:.7">${c.de}</div>
+        <div class="card-pl">${c.pl}</div>
+        ${c.ex?'<div class="card-ex">„'+c.ex+'"</div>':''}
+        ${c.exPl?'<div class="card-expl">'+c.exPl+'</div>':''}
+        ${c.note?'<div class="card-note">📝 '+c.note+'</div>':''}
+        <div class="card-num">${idx+1} / ${list.length}</div>
+      </div>
+    </div>`;
+  setupSwipe();
+}
+function flipCard(){flipped=!flipped;renderCard()}
+function go(d){if(!list.length)return;idx=(idx+d+list.length)%list.length;flipped=false;renderCard()}
+function mark(type){
+  if(!list.length)return;
+  checkStreak();
+  const k=list[idx].de;
+  if(type==='unk'||type==='hard'){saved=saved.filter(x=>x!==k);known=known.filter(x=>x!==k);saved.push(k)}
+  else{saved=saved.filter(x=>x!==k);known=known.filter(x=>x!==k);known.push(k)}
+  save();
+  const mode=document.getElementById('fMode').value;
+  if(mode==='new'||mode==='unk'||mode==='know'){list.splice(idx,1);if(idx>=list.length)idx=0;flipped=false;renderCard();updateStats();return}
+  go(1);updateStats();
+}
+
+// swipe
+let sx=0,sy=0;
+function setupSwipe(){
+  const el=document.querySelector('.card');if(!el)return;
+  el.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+  el.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)){e.preventDefault();dx>0?go(-1):go(1)}
+  });
+}
+
+// ============================================================
+//  LIST
+// ============================================================
+function setListTab(t,btn){listTab=t;document.querySelectorAll('.list-tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderList()}
+function renderList(){
+  const q=document.getElementById('listSearch').value.toLowerCase();
+  let items=deck();
+  if(listTab==='unk')items=items.filter(c=>saved.includes(c.de));
+  else if(listTab==='know')items=items.filter(c=>known.includes(c.de));
+  else if(listTab==='new')items=items.filter(c=>!saved.includes(c.de)&&!known.includes(c.de));
+  else if(listTab==='custom')items=items.filter(c=>custom.some(x=>x[1]===c.de));
+  if(q)items=items.filter(c=>(c.de+c.pl+c.ex).toLowerCase().includes(q));
+  const box=document.getElementById('listBox');
+  if(!items.length){box.innerHTML='<div class="empty-card" style="min-height:80px">Brak wyników</div>';return}
+  box.innerHTML=items.map(c=>{
+    const st=saved.includes(c.de)?'unknown':known.includes(c.de)?'known':'new';
+    return `<div class="list-item">
+      <div class="li-status ${st}"></div>
+      <div class="li-text">
+        <div class="li-de">${c.de}</div>
+        <div class="li-pl">${c.pl}</div>
+        ${c.ex?'<div class="li-ex">'+c.ex+'</div>':''}
+        <span class="li-cat">${c.cat}</span>${c.note?' <span class="li-cat">'+c.note+'</span>':''}
+      </div>
+      <div class="li-actions">
+        <button onclick="toggleSaved('${c.de.replace(/'/g,"\\'")}')">${saved.includes(c.de)?'✅':'📌'}</button>
+        ${custom.some(x=>x[1]===c.de)?'<button onclick="delCustom(\''+c.de.replace(/'/g,"\\'")+'\')">🗑</button>':''}
+      </div>
+    </div>`}).join('');
+}
+function toggleSaved(de){
+  if(saved.includes(de)){saved=saved.filter(x=>x!==de);if(!known.includes(de))known.push(de)}
+  else{known=known.filter(x=>x!==de);if(!saved.includes(de))saved.push(de)}
+  save();renderList();updateStats();
+}
+function delCustom(de){
+  if(!confirm('Usunąć fiszkę?'))return;
+  custom=custom.filter(x=>x[1]!==de);saved=saved.filter(x=>x!==de);known=known.filter(x=>x!==de);
+  save();renderList();rebuild();
+}
+
+// ============================================================
+//  ADD
+// ============================================================
+function addCard(){
+  const g=id=>document.getElementById(id).value.trim();
+  if(!g('addDe')||!g('addPl')){alert('Podaj przynajmniej DE i PL');return}
+  custom.push([g('addCat'),g('addDe'),g('addPl'),g('addEx'),g('addExPl'),g('addNote')]);
+  if(!saved.includes(g('addDe')))saved.push(g('addDe'));
+  save();
+  ['addDe','addPl','addEx','addExPl','addNote'].forEach(id=>document.getElementById(id).value='');
+  alert('✅ Dodano fiszkę!');
+  rebuild();
+}
+
+// ============================================================
+//  EXPORT
+// ============================================================
+function doExport(type){
+  const q=s=>'"'+String(s||'').replace(/"/g,'""')+'"';
+  let items=deck();
+  if(type==='unk')items=items.filter(c=>saved.includes(c.de));
+  else if(type==='know')items=items.filter(c=>known.includes(c.de));
+  else if(type==='custom')items=items.filter(c=>custom.some(x=>x[1]===c.de));
+  if(!items.length){alert('Brak kart do eksportu');return}
+  const csv=items.map(c=>[c.de,c.pl,c.ex,c.exPl,c.note,c.cat].map(q).join(',')).join('\n');
+  const bom='\uFEFF';
+  const blob=new Blob([bom+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='fiszki_'+type+'.csv';a.click();
+}
+
+// ============================================================
+//  NAV
+// ============================================================
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(id==='pageList')renderList();
+}
+
+// init
+checkStreak();rebuild();
+</script>
+</body>
+</html>
